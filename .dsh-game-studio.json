@@ -10,7 +10,19 @@
       "dimension": "2d",
       "orientation": "portrait",
       "cover": "game/cover.jpg"
+    },
+    "game-2": {
+      "title": "箭定乾坤",
+      "source": "1ffe880102cec58a",
+      "publishedAt": "2026-11-23T03:35:45.528Z",
+      "buildId": "d25e842d085e",
+      "dimension": "2d",
+      "orientation": "portrait",
+      "cover": "game-2/cover.jpg"
     }
   },
-  "wall": null
+  "wall": {
+    "publishedAt": "2026-11-23T03:35:45.528Z",
+    "games": 2
+  }
 }
