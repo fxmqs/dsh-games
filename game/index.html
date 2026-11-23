@@ -188,7 +188,8 @@
     bestRecord: null,
     dailyRecords: {},
     levelRecords: {},
-    recentRuns: []
+    recentRuns: [],
+    inProgress: null
   };
   function loadSave() {
     try {
@@ -206,6 +207,7 @@
       if (!save.dailyRecords || typeof save.dailyRecords !== 'object') save.dailyRecords = {};
       if (!save.levelRecords || typeof save.levelRecords !== 'object') save.levelRecords = {};
       if (!Array.isArray(save.recentRuns)) save.recentRuns = [];
+      if (!save.inProgress || typeof save.inProgress !== 'object') save.inProgress = null;
     } catch (_e) {}
   }
   function writeSave() {
@@ -249,7 +251,19 @@
     return (save.dailyRecords && save.dailyRecords[td]) || null;
   }
 
+  function isMomentsSinglePageMode() {
+    if (GAME && GAME.isMomentsSinglePage) return true;
+    try {
+      if (typeof wx !== 'undefined' && wx && typeof wx.getLaunchOptionsSync === 'function') {
+        var opts = wx.getLaunchOptionsSync();
+        if (opts && opts.scene === 1154) return true;
+      }
+    } catch (_e) {}
+    return false;
+  }
+
   function syncWeChatCloudRank() {
+    if (isMomentsSinglePageMode()) return;
     if (typeof wx === 'undefined' || !wx || typeof wx.setUserCloudStorage !== 'function') return;
     var td = todaySeedInfo().tag;
     var dailyRec = (save.dailyRecords && save.dailyRecords[td]) || null;
@@ -289,6 +303,7 @@
   var WX_RANK_CANVAS_H = 446;
 
   function getWxOpenDataContext() {
+    if (isMomentsSinglePageMode()) return null;
     if (typeof wx === 'undefined' || !wx || typeof wx.getOpenDataContext !== 'function') return null;
     try {
       return wx.getOpenDataContext();
@@ -347,17 +362,22 @@
 
   function triggerRankShare() {
     sfxClick();
+    if (GAME && typeof GAME.shareAppMessage === 'function') {
+      GAME.shareAppMessage();
+      return;
+    }
     if (typeof wx !== 'undefined' && wx && typeof wx.shareAppMessage === 'function') {
-      var payload = (typeof window.__wxSharePayload === 'function') ? window.__wxSharePayload() : {};
+      var payload = (typeof window.__wxSharePayload === 'function') ? window.__wxSharePayload('appMessage') : {};
       try {
         wx.shareAppMessage({
           title: (payload && payload.title) || '我在《箭定乾坤》创下新纪录，敢来比拼分数与通关耗时吗？',
-          imageUrl: (GAME && GAME.wxConfig && GAME.wxConfig.shareImageUrl) || 'images/share-cover.jpg'
+          imageUrl: (payload && payload.imageUrl) || (GAME && GAME.wxConfig && GAME.wxConfig.shareImageUrl) || 'images/share-cover.jpg',
+          query: (payload && payload.query) || 'src=friend'
         });
         return;
       } catch (_e) {}
     }
-    showToast('微信小游戏版可直接邀好友比拼耗时');
+    showToast('微信小游戏版可直接转发好友比拼耗时');
   }
 
   function currentSkin() {
@@ -783,7 +803,148 @@
     };
   }
 
+  var autoSaveTimer = 0;
+
+  function getValidInProgress() {
+    var snap = save.inProgress;
+    if (!snap || typeof snap !== 'object') return null;
+    if (!Array.isArray(snap.arrows) || snap.arrows.length === 0) return null;
+    if (!(Number(snap.hearts) > 0) || !(Number(snap.timeLeft) > 0)) return null;
+    if (!(Number(snap.gridSize) >= 4 && Number(snap.gridSize) <= 8)) return null;
+    if (snap.mode === 'daily' && snap.dateTag !== todaySeedInfo().tag) {
+      save.inProgress = null;
+      writeSave();
+      return null;
+    }
+    return snap;
+  }
+
+  function clearInProgress() {
+    if (save.inProgress !== null) {
+      save.inProgress = null;
+      writeSave();
+    }
+  }
+
+  function saveInProgress(force) {
+    if (phase !== 'playing' || !boardSpec) return false;
+    var alive = [];
+    for (var i = 0; i < arrows.length; i++) {
+      var a = arrows[i];
+      if (!a.alive) continue;
+      alive.push({
+        id: a.id,
+        r: a.r,
+        c: a.c,
+        dir: a.dir,
+        kind: a.kind || 'normal',
+        ice: a.ice || 0,
+        rotLeft: a.rotLeft || 0,
+        role: a.role || ''
+      });
+    }
+    if (!alive.length || hearts <= 0 || timeLeft <= 0) return false;
+    var hasProgress = runStarted || score > 0 || mistakes > 0 || hintCharges < R.hintCharges || removeCharges < R.removeCharges || runTime >= 1.5;
+    if (!force && !hasProgress) return false;
+    if (force && !hasProgress && mode === 'campaign' && level === 1) return false;
+
+    save.inProgress = {
+      v: 1,
+      mode: mode,
+      level: level,
+      dateTag: todaySeedInfo().tag,
+      gridSize: boardSpec.gridSize,
+      reward: boardSpec.reward,
+      label: boardSpec.label,
+      hearts: hearts,
+      timeLeft: Math.round(timeLeft * 100) / 100,
+      runTime: Math.round(runTime * 100) / 100,
+      runStarted: runStarted,
+      score: score,
+      combo: combo,
+      comboTimer: Math.round(comboTimer * 100) / 100,
+      maxComboThisRun: maxComboThisRun,
+      mistakes: mistakes,
+      hintCharges: hintCharges,
+      removeCharges: removeCharges,
+      reviveUsed: reviveUsed,
+      tutorialStep: tutorialStep,
+      savedAt: Date.now(),
+      arrows: alive
+    };
+    writeSave();
+    return true;
+  }
+
+  function resumeSavedProgress() {
+    var snap = getValidInProgress();
+    if (!snap) {
+      var fallbackLv = R.level > 1 ? R.level : (save.tutorialDone ? Math.min(60, save.maxLevel || 1) : 1);
+      startLevel(fallbackLv, 'campaign');
+      return false;
+    }
+    mode = snap.mode === 'daily' ? 'daily' : 'campaign';
+    level = mode === 'daily' ? 1 : Math.max(1, Math.min(60, Number(snap.level) || 1));
+    var baseSpec = levelSpec(level, mode);
+    boardSpec = {
+      gridSize: Number(snap.gridSize) || baseSpec.gridSize,
+      count: baseSpec.count,
+      iceCount: baseSpec.iceCount,
+      bombCount: baseSpec.bombCount,
+      goldCount: baseSpec.goldCount,
+      rotCount: baseSpec.rotCount,
+      reward: Number(snap.reward) || baseSpec.reward,
+      label: snap.label || baseSpec.label
+    };
+    arrows = [];
+    for (var i = 0; i < snap.arrows.length; i++) {
+      var sa = snap.arrows[i];
+      arrows.push({
+        id: Number(sa.id) || (i + 1),
+        r: Number(sa.r) || 0,
+        c: Number(sa.c) || 0,
+        dir: Math.max(0, Math.min(3, Number(sa.dir) || 0)),
+        kind: sa.kind || 'normal',
+        ice: Math.max(0, Number(sa.ice) || 0),
+        rotLeft: Math.max(0, Number(sa.rotLeft) || 0),
+        role: sa.role || '',
+        alive: true,
+        shake: 0,
+        pop: 1,
+        hintGlow: 0
+      });
+    }
+    flying = [];
+    particles = [];
+    floaters = [];
+    hearts = Math.max(1, Math.min(R.hearts, Number(snap.hearts) || R.hearts));
+    timeLeft = Math.max(1, Number(snap.timeLeft) || R.duration);
+    runTime = Math.max(0, Number(snap.runTime) || 0);
+    runStarted = !!snap.runStarted;
+    lastClearMs = 0;
+    isNewBestRecord = false;
+    isNewLevelRecord = false;
+    score = Math.max(0, Number(snap.score) || 0);
+    combo = Math.max(0, Number(snap.combo) || 0);
+    comboTimer = Math.max(0, Number(snap.comboTimer) || 0);
+    maxComboThisRun = Math.max(0, Number(snap.maxComboThisRun) || 0);
+    mistakes = Math.max(0, Number(snap.mistakes) || 0);
+    hintCharges = Math.max(0, Number(snap.hintCharges) || 0);
+    removeCharges = Math.max(0, Number(snap.removeCharges) || 0);
+    removeMode = false;
+    doubleClaimed = false;
+    reviveUsed = !!snap.reviveUsed;
+    lastRewardEarned = 0;
+    tutorialStep = Math.max(0, Number(snap.tutorialStep) || 0);
+    autoSaveTimer = 0;
+    modal = null;
+    phase = 'playing';
+    showToast('已恢复上次破阵进度！');
+    return true;
+  }
+
   function startLevel(targetLevel, targetMode) {
+    clearInProgress();
     mode = targetMode || 'campaign';
     level = mode === 'daily' ? 1 : Math.max(1, Math.min(60, targetLevel));
     var built = buildLevelArrows(level, mode);
@@ -810,6 +971,7 @@
     doubleClaimed = false;
     reviveUsed = false;
     lastRewardEarned = 0;
+    autoSaveTimer = 0;
     modal = null;
     phase = 'playing';
     tutorialStep = (mode === 'campaign' && level === 1 && R.tutorialEnabled && !save.tutorialDone) ? 1 : 0;
@@ -964,12 +1126,15 @@
       }
       save.recentRuns.unshift(runRec);
       if (save.recentRuns.length > 30) save.recentRuns.length = 30;
+      save.inProgress = null;
       writeSave();
       syncWeChatCloudRank();
       sfxWin();
       vibrate('medium');
       spawnParticles(W * 0.5, H * 0.42, '#FFD452', 36);
       spawnParticles(W * 0.5, H * 0.42, '#2BAE85', 24);
+    } else {
+      saveInProgress(false);
     }
   }
 
@@ -1013,6 +1178,7 @@
 
     // 转向机关箭：受阻时不扣心，原地顺时针旋转 90°
     if (arrow.kind === 'rotator' && arrow.rotLeft > 0) {
+      runStarted = true;
       arrow.dir = CW[arrow.dir];
       arrow.rotLeft -= 1;
       arrow.pop = 1.24;
@@ -1020,6 +1186,7 @@
       vibrate('light');
       var rpos = cellCenter(arrow.r, arrow.c);
       addFloater(rpos.x, rpos.y - 20, '转向成功', '#2BAE85');
+      saveInProgress(false);
       return;
     }
 
@@ -1040,6 +1207,9 @@
         phase = 'lost';
         toastTimer = 0;
         floaters = [];
+        clearInProgress();
+      } else {
+        saveInProgress(false);
       }
     }
   }
@@ -1066,6 +1236,7 @@
     for (var i = 0; i < arrows.length; i++) {
       if (topIds.indexOf(arrows[i].id) !== -1) arrows[i].hintGlow = 3.6;
     }
+    saveInProgress(false);
     showToast('金色光环为推荐出箭顺序');
   }
 
@@ -1420,26 +1591,61 @@
     ctx.fillStyle = '#536A5C';
     ctx.fillText('点按飞箭 · 连清全盘 · 每日千人同盘', W * 0.5, cardY + 478);
 
-    // 主操作按钮（点击直入第 1 关 / 当前关，绝不绕路）
+    // 主操作按钮（存在未完成断点时，第一按钮直达无缝续玩；否则直入当前关）
     var btnY = cardY + 536;
     var nextLv = R.level > 1 ? R.level : (save.tutorialDone ? Math.min(60, save.maxLevel || 1) : 1);
-    drawJellyButton(
-      'start_campaign',
-      110, btnY, 500, 102,
-      save.tutorialDone ? ('继续破阵 · 第 ' + nextLv + ' 阵') : '立即开局 · 第 1 阵',
-      '单手点按，三秒极速解压',
-      '#2BAE85', '#1D7F60', '#FFFFFF',
-      function () { startLevel(nextLv, 'campaign'); }
-    );
+    var savedSnap = getValidInProgress();
+    if (savedSnap) {
+      var resumeTitle = savedSnap.mode === 'daily'
+        ? '继续上次进度 · 每日一局'
+        : ('继续上次进度 · 第 ' + savedSnap.level + ' 阵');
+      var resumeSub = '剩 ' + savedSnap.arrows.length + ' 支箭 · 得分 ' + savedSnap.score + ' · 已用 ' + Math.max(1, Math.round(savedSnap.runTime)) + ' 秒';
+      drawJellyButton(
+        'start_campaign',
+        110, btnY, 500, 102,
+        resumeTitle,
+        resumeSub,
+        '#2BAE85', '#1D7F60', '#FFFFFF',
+        function () { resumeSavedProgress(); }
+      );
+      if (savedSnap.mode === 'daily') {
+        drawJellyButton(
+          'start_daily',
+          110, btnY + 128, 500, 86,
+          '主线破阵 · 第 ' + nextLv + ' 阵',
+          '开启新局将替换当前暂存进度',
+          '#E9A626', '#B37A10', '#FFFFFF',
+          function () { startLevel(nextLv, 'campaign'); }
+        );
+      } else {
+        drawJellyButton(
+          'start_daily',
+          110, btnY + 128, 500, 86,
+          '每日一局 · 今日同盘',
+          '通关奖 150 灵玉（将替换暂存进度）',
+          '#E9A626', '#B37A10', '#FFFFFF',
+          function () { startLevel(1, 'daily'); }
+        );
+      }
+    } else {
+      drawJellyButton(
+        'start_campaign',
+        110, btnY, 500, 102,
+        save.tutorialDone ? ('继续破阵 · 第 ' + nextLv + ' 阵') : '立即开局 · 第 1 阵',
+        '单手点按，三秒极速解压',
+        '#2BAE85', '#1D7F60', '#FFFFFF',
+        function () { startLevel(nextLv, 'campaign'); }
+      );
 
-    drawJellyButton(
-      'start_daily',
-      110, btnY + 128, 500, 86,
-      '每日一局 · 今日同盘',
-      '通关奖 150 灵玉与今日勋章',
-      '#E9A626', '#B37A10', '#FFFFFF',
-      function () { startLevel(1, 'daily'); }
-    );
+      drawJellyButton(
+        'start_daily',
+        110, btnY + 128, 500, 86,
+        '每日一局 · 今日同盘',
+        '通关奖 150 灵玉与今日勋章',
+        '#E9A626', '#B37A10', '#FFFFFF',
+        function () { startLevel(1, 'daily'); }
+      );
+    }
 
     // 五系统 + 好友耗时排行榜入口（四栏居中）
     var subY = btnY + 242;
@@ -1504,9 +1710,11 @@
       sfxClick();
     });
     drawJellyButton('btn_home', 602, safeTop + 4, 88, 68, '主页', null, '#8CA196', '#62766C', '#FFFFFF', function () {
+      var saved = (phase === 'playing') ? saveInProgress(true) : false;
       phase = 'title';
       modal = null;
       sfxClick();
+      if (saved) showToast('进度已自动保存，随时继续');
     });
   }
 
@@ -1712,11 +1920,12 @@
         else { startLevel(Math.min(60, level + 1), 'campaign'); }
       });
 
-      var halfBtnW = Math.floor((cw - 128) * 0.5);
-      drawJellyButton('btn_win_rank', cx + 56, cy + 558, halfBtnW, 64, '查看排行', null, '#3B8CE6', '#2463AC', '#FFFFFF', function () {
+      var triBtnW = Math.floor((cw - 136) / 3);
+      drawJellyButton('btn_win_share', cx + 56, cy + 558, triBtnW, 64, '炫耀好友', null, '#E9A626', '#B37A10', '#FFFFFF', triggerRankShare);
+      drawJellyButton('btn_win_rank', cx + 68 + triBtnW, cy + 558, triBtnW, 64, '查看排行', null, '#3B8CE6', '#2463AC', '#FFFFFF', function () {
         openRankModal(mode === 'daily' ? 'daily' : 'best');
       });
-      drawJellyButton('btn_win_home', cx + 72 + halfBtnW, cy + 558, halfBtnW, 64, '返回主页', null, '#8CA196', '#62766C', '#FFFFFF', function () {
+      drawJellyButton('btn_win_home', cx + 80 + triBtnW * 2, cy + 558, triBtnW, 64, '返回主页', null, '#8CA196', '#62766C', '#FFFFFF', function () {
         phase = 'title';
       });
     } else {
@@ -1735,6 +1944,7 @@
             hearts = R.hearts;
             timeLeft = Math.max(timeLeft, 60);
             phase = 'playing';
+            saveInProgress(true);
             sfxWin();
             showToast('已恢复三心，继续清盘！');
           });
@@ -2206,6 +2416,10 @@
     }
     if (modal) return;
     if (phase === 'title') {
+      if (R.level === 1 && getValidInProgress()) {
+        resumeSavedProgress();
+        return;
+      }
       var nextLv = R.level > 1 ? R.level : (save.tutorialDone ? Math.min(60, save.maxLevel || 1) : 1);
       startLevel(nextLv, R.mode);
       return;
@@ -2239,8 +2453,12 @@
       if (ev.key === 'Enter' || ev.key === ' ') {
         if (phase === 'title') {
           unlockAudio();
-          var nextLv = save.tutorialDone ? Math.min(60, save.maxLevel || 1) : 1;
-          startLevel(nextLv, 'campaign');
+          if (R.level === 1 && getValidInProgress()) {
+            resumeSavedProgress();
+          } else {
+            var nextLv = save.tutorialDone ? Math.min(60, save.maxLevel || 1) : 1;
+            startLevel(nextLv, 'campaign');
+          }
         } else if (phase === 'won' || phase === 'lost') {
           startLevel(phase === 'won' ? Math.min(60, level + 1) : level, mode);
         }
@@ -2263,11 +2481,21 @@
       }
       if (tutorialStep === 0) {
         timeLeft = Math.max(0, timeLeft - dt);
-        if (timeLeft <= 0) phase = 'lost';
+        if (timeLeft <= 0) {
+          phase = 'lost';
+          clearInProgress();
+        }
       }
       if (comboTimer > 0) {
         comboTimer = Math.max(0, comboTimer - dt);
         if (comboTimer === 0) combo = 0;
+      }
+      if (phase === 'playing' && runStarted) {
+        autoSaveTimer += dt;
+        if (autoSaveTimer >= 3.0) {
+          autoSaveTimer = 0;
+          saveInProgress(false);
+        }
       }
     }
 
@@ -2353,25 +2581,120 @@
   }
   requestAnimationFrame(loop);
 
-  /* 15. 微信分享动态文案与 Game Studio 自动试玩契约 */
-  window.__wxSharePayload = function () {
+  /* 15. 微信分享（好友 5:4 卡片 + 朋友圈 1:1 封面 + query 落地接管）与自动试玩契约 */
+  function buildShareMeta(channel) {
+    var isTimeline = channel === 'timeline';
+    var src = isTimeline ? 'timeline' : 'friend';
+    var img = isTimeline
+      ? ((GAME && GAME.wxConfig && GAME.wxConfig.timelineImageUrl) || 'images/share-timeline.jpg')
+      : ((GAME && GAME.wxConfig && GAME.wxConfig.shareImageUrl) || 'images/share-cover.jpg');
     var tdBest = getTodayDailyBest();
     if (mode === 'daily' && phase === 'won') {
-      return { title: '我在《' + TITLE + '》今日同盘拿下 ' + score + ' 分、仅耗时 ' + formatDurationZh(lastClearMs) + '，敢来破我纪录吗？' };
+      return {
+        title: '我在《' + TITLE + '》今日同盘拿下 ' + score + ' 分、耗时 ' + formatDurationZh(lastClearMs) + '，敢来破我纪录吗？',
+        imageUrl: img,
+        query: 'mode=daily&src=' + src + '&score=' + score + '&ms=' + lastClearMs
+      };
     }
     if (phase === 'won') {
-      return { title: '我在《' + TITLE + '》第 ' + level + ' 阵拿下 ' + score + ' 分、耗时 ' + formatDurationZh(lastClearMs) + '！敢来比手速吗？' };
+      return {
+        title: '我在《' + TITLE + '》第 ' + level + ' 阵拿下 ' + score + ' 分、耗时 ' + formatDurationZh(lastClearMs) + '！敢来比手速吗？',
+        imageUrl: img,
+        query: 'mode=campaign&level=' + level + '&src=' + src + '&score=' + score + '&ms=' + lastClearMs
+      };
     }
     if (tdBest && tdBest.score > 0) {
-      return { title: '今日千人同盘已破：' + tdBest.score + ' 分 · 耗时 ' + formatDurationZh(tdBest.clearMs) + '，来挑战同一盘！' };
+      return {
+        title: '《' + TITLE + '》今日同盘已破：' + tdBest.score + ' 分 · ' + formatDurationZh(tdBest.clearMs) + '，来挑战同一盘！',
+        imageUrl: img,
+        query: 'mode=daily&src=' + src + '&score=' + tdBest.score + '&ms=' + tdBest.clearMs
+      };
     }
     if (save.bestRecord && save.bestRecord.score > 0) {
-      return { title: '我在《' + TITLE + '》最高拿下 ' + save.bestRecord.score + ' 分（耗时 ' + formatDurationZh(save.bestRecord.clearMs) + '），敢来比拼吗？' };
+      return {
+        title: '我在《' + TITLE + '》最高拿下 ' + save.bestRecord.score + ' 分（耗时 ' + formatDurationZh(save.bestRecord.clearMs) + '），敢来比拼吗？',
+        imageUrl: img,
+        query: 'mode=campaign&level=' + (save.bestRecord.level || 1) + '&src=' + src
+      };
     }
-    return { title: '看清方向一键飞箭，先比分数再拼耗时，快来破阵！' };
+    return {
+      title: isTimeline
+        ? ('《' + TITLE + '》每日千人同盘，先比得分再拼通关耗时！')
+        : '看清方向一键飞箭，先比分数再拼耗时，快来破阵！',
+      imageUrl: img,
+      query: 'mode=daily&src=' + src
+    };
+  }
+
+  window.__wxSharePayload = function (channel) {
+    return buildShareMeta(channel === 'timeline' ? 'timeline' : 'appMessage');
+  };
+  window.__wxShareTimelinePayload = function () {
+    return buildShareMeta('timeline');
   };
 
+  function applyIncomingShareQuery(queryObj, sceneNum) {
+    if (!queryObj || typeof queryObj !== 'object') return false;
+    var qMode = queryObj.mode ? String(queryObj.mode) : '';
+    var qSrc = queryObj.src ? String(queryObj.src) : '';
+    var qLv = Number(queryObj.level);
+    if (!qMode && !qSrc) return false;
+    if (sceneNum === 1154) return false; // 朋友圈单页预览保持首屏展示
+    if (qMode === 'daily') {
+      var existDaily = getValidInProgress();
+      if (existDaily && existDaily.mode === 'daily') {
+        resumeSavedProgress();
+      } else {
+        startLevel(1, 'daily');
+      }
+      showToast(qSrc === 'timeline' ? '来自朋友圈分享：进入今日同盘！' : '来自好友分享：进入今日同盘！');
+      return true;
+    }
+    if (qMode === 'campaign' && isFinite(qLv) && qLv >= 1 && qLv <= 60) {
+      var targetLv = Math.round(qLv);
+      var existCamp = getValidInProgress();
+      if (existCamp && existCamp.mode === 'campaign' && existCamp.level === targetLv) {
+        resumeSavedProgress();
+      } else {
+        startLevel(targetLv, 'campaign');
+      }
+      showToast('已进入好友分享的第 ' + targetLv + ' 阵！');
+      return true;
+    }
+    return false;
+  }
+
+  // 微信切后台 & 网页关闭自动落盘当前阵局进度，确保无缝断点续玩
+  if (typeof wx !== 'undefined' && wx) {
+    try {
+      if (typeof wx.onHide === 'function') {
+        wx.onHide(function () { saveInProgress(true); });
+      }
+      if (typeof wx.getLaunchOptionsSync === 'function') {
+        var initLaunch = wx.getLaunchOptionsSync();
+        if (initLaunch && initLaunch.query) {
+          applyIncomingShareQuery(initLaunch.query, initLaunch.scene);
+        }
+      }
+      if (typeof wx.onShow === 'function') {
+        wx.onShow(function (res) {
+          if (res && res.query) applyIncomingShareQuery(res.query, res.scene);
+        });
+      }
+    } catch (_eShareInit) {}
+  }
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) saveInProgress(true);
+    });
+  }
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('pagehide', function () { saveInProgress(true); });
+    window.addEventListener('beforeunload', function () { saveInProgress(true); });
+  }
+
   window.__gameState = function () {
+    var savedSnap = getValidInProgress();
     return {
       phase: phase,
       modal: modal,
@@ -2379,6 +2702,8 @@
       score: score,
       runTime: Math.round(runTime * 100) / 100,
       lastClearMs: lastClearMs,
+      hasSavedProgress: !!savedSnap,
+      savedProgress: savedSnap ? { mode: savedSnap.mode, level: savedSnap.level, remaining: savedSnap.arrows.length, score: savedSnap.score, runTime: savedSnap.runTime } : null,
       bestRecord: save.bestRecord,
       dailyBest: getTodayDailyBest(),
       hearts: hearts,
