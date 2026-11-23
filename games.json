@@ -1,0 +1,19 @@
+{
+  "format": "dsh-games-feed",
+  "version": 1,
+  "name": "fxmqs 的小游戏",
+  "author": "fxmqs",
+  "updatedAt": "2026-11-23T03:34:55.005Z",
+  "games": [
+    {
+      "slug": "game",
+      "title": "箭定乾坤",
+      "url": "game/",
+      "cover": "game/cover.jpg",
+      "dimension": "2d",
+      "orientation": "portrait",
+      "publishedAt": "2026-11-23T03:34:55.005Z"
+    }
+  ],
+  "wall": null
+}

@@ -1,0 +1,1939 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; media-src data: blob:; font-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; form-action 'none'">
+<title>箭定乾坤</title>
+<style>html,body{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;background:#000;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}canvas{display:block;width:100vw;height:100vh;height:100dvh;touch-action:none;outline:none;-webkit-tap-highlight-color:transparent}</style></head><body><canvas id="game" tabindex="0"></canvas>
+<script>window.addEventListener("keydown",function(e){if(e.key==="Escape")try{parent.postMessage({type:"dsh-wall-escape"},"*")}catch(_){}});window.GAME={"title":"箭定乾坤","rules":{"duration":180,"hearts":3,"level":1,"mode":"campaign","tutorialEnabled":true,"hintCharges":2,"removeCharges":1,"gachaCost":120},"slots":{"hero":{"tile":false,"custom":false},"enemy":{"tile":false,"custom":false},"pickup":{"tile":false,"custom":false}},"assets":{"hero":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2IiB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiI+DQogIDwhLS0gTGl0dGxlIHJvdW5kIGFkdmVudHVyZXIsIGZhY2luZyB0aGUgdmlld2VyLiBGbGF0IGNhcnRvb24sIGRhcmsgb3V0bGluZS4gLS0+DQogIDwhLS0gR3JvdW5kIHNoYWRvdyAtLT4NCiAgPGVsbGlwc2UgY3g9IjEyOCIgY3k9IjIyOCIgcng9IjU4IiByeT0iMTYiIGZpbGw9IiMxZjRkMmUiIG9wYWNpdHk9IjAuMzUiLz4NCiAgPCEtLSBCYWNrcGFjayAtLT4NCiAgPHJlY3QgeD0iNTYiIHk9IjEyMCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjUyIiByeD0iMTIiIGZpbGw9IiNlOGExM2MiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4Ii8+DQogIDxwYXRoIGQ9Ik01NiAxMzJoNDAiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI2Ii8+DQogIDwhLS0gTGVncyAtLT4NCiAgPHJlY3QgeD0iODYiIHk9IjE2OCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjQ0IiByeD0iMTIiIGZpbGw9IiMyZjZiNGYiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4Ii8+DQogIDxyZWN0IHg9IjEzNCIgeT0iMTY4IiB3aWR0aD0iMjYiIGhlaWdodD0iNDQiIHJ4PSIxMiIgZmlsbD0iIzJmNmI0ZiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiLz4NCiAgPCEtLSBCb290cyAtLT4NCiAgPHJlY3QgeD0iNzgiIHk9IjE5OCIgd2lkdGg9IjQyIiBoZWlnaHQ9IjIyIiByeD0iMTAiIGZpbGw9IiM3YTRhMmIiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4Ii8+DQogIDxyZWN0IHg9IjEyOCIgeT0iMTk4IiB3aWR0aD0iNDIiIGhlaWdodD0iMjIiIHJ4PSIxMCIgZmlsbD0iIzdhNGEyYiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiLz4NCiAgPCEtLSBCb2R5IC0tPg0KICA8cGF0aCBkPSJNNzYgOTZjMC0yNiAyMC00NiA0Ni00NmgxMmMyNiAwIDQ2IDIwIDQ2IDQ2djYyYzAgMjItMTYgNDAtMzggNDJoLTI4Yy0yMi0yLTM4LTIwLTM4LTQyeiIgZmlsbD0iI2U4NWQzZCIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiLz4NCiAgPCEtLSBCZWx0IC0tPg0KICA8cmVjdCB4PSI3NiIgeT0iMTUwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjE0IiBmaWxsPSIjMmIxYjEyIi8+DQogIDxyZWN0IHg9IjExOCIgeT0iMTQ4IiB3aWR0aD0iMjAiIGhlaWdodD0iMTgiIHJ4PSI0IiBmaWxsPSIjZjJjMTRlIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iNiIvPg0KICA8IS0tIFNjYXJmIGtub3QgLS0+DQogIDxwYXRoIGQ9Ik05NiA5OGM4IDggMjAgMTIgMzIgMTJzMjQtNCAzMi0xMmwtMTAgMThjLTYgNi0xNiA4LTIyIDhzLTE2LTItMjItOHoiIGZpbGw9IiMzZjhmNWEiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI3Ii8+DQogIDwhLS0gQXJtcyAtLT4NCiAgPHJlY3QgeD0iNDQiIHk9IjEwOCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjU0IiByeD0iMTUiIGZpbGw9IiNlODVkM2QiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4Ii8+DQogIDxyZWN0IHg9IjE4MiIgeT0iMTA4IiB3aWR0aD0iMzAiIGhlaWdodD0iNTQiIHJ4PSIxNSIgZmlsbD0iI2U4NWQzZCIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiLz4NCiAgPGNpcmNsZSBjeD0iNTkiIGN5PSIxNzAiIHI9IjE0IiBmaWxsPSIjZjdkOWE4IiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iOCIvPg0KICA8Y2lyY2xlIGN4PSIxOTciIGN5PSIxNzAiIHI9IjE0IiBmaWxsPSIjZjdkOWE4IiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iOCIvPg0KICA8IS0tIEhlYWQgLS0+DQogIDxjaXJjbGUgY3g9IjEyOCIgY3k9IjgyIiByPSI0MiIgZmlsbD0iI2Y3ZDlhOCIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiLz4NCiAgPCEtLSBFeWVzIC0tPg0KICA8ZWxsaXBzZSBjeD0iMTEyIiBjeT0iNzgiIHJ4PSI2IiByeT0iOCIgZmlsbD0iIzJiMWIxMiIvPg0KICA8ZWxsaXBzZSBjeD0iMTQ2IiBjeT0iNzgiIHJ4PSI2IiByeT0iOCIgZmlsbD0iIzJiMWIxMiIvPg0KICA8Y2lyY2xlIGN4PSIxMTQiIGN5PSI3NSIgcj0iMi40IiBmaWxsPSIjZmZmZmZmIi8+DQogIDxjaXJjbGUgY3g9IjE0OCIgY3k9Ijc1IiByPSIyLjQiIGZpbGw9IiNmZmZmZmYiLz4NCiAgPCEtLSBDaGVla3MgLS0+DQogIDxjaXJjbGUgY3g9Ijk4IiBjeT0iOTIiIHI9IjciIGZpbGw9IiNmMDhhNmUiIG9wYWNpdHk9IjAuOCIvPg0KICA8Y2lyY2xlIGN4PSIxNTgiIGN5PSI5MiIgcj0iNyIgZmlsbD0iI2YwOGE2ZSIgb3BhY2l0eT0iMC44Ii8+DQogIDwhLS0gTW91dGggLS0+DQogIDxwYXRoIGQ9Ik0xMTggOTZjNCA1IDE2IDUgMjAgMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPg0KICA8IS0tIEhhdCAtLT4NCiAgPHBhdGggZD0iTTg0IDY2YzAtMjAgMTYtMzYgMzYtMzZoMTZjMjAgMCAzNiAxNiAzNiAzNnYxNEg4NHoiIGZpbGw9IiMzZjhmNWEiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4Ii8+DQogIDxyZWN0IHg9Ijc4IiB5PSI3MiIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNiIgcng9IjgiIGZpbGw9IiMyZjZiNGYiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4Ii8+DQo8L3N2Zz4NCg==","enemy":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2IiB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiI+DQogIDwhLS0gR3J1bXB5IHNwaWt5IGJsb2IuIEZsYXQgY2FydG9vbiwgZGFyayBvdXRsaW5lLiAtLT4NCiAgPGVsbGlwc2UgY3g9IjEyOCIgY3k9IjIzMCIgcng9IjYyIiByeT0iMTQiIGZpbGw9IiMxZjRkMmUiIG9wYWNpdHk9IjAuMzUiLz4NCiAgPCEtLSBTcGlrZXMgLS0+DQogIDxwYXRoIGQ9Ik0xMjggMjZsMTQgMzQtMzggOHoiIGZpbGw9IiM1YTRhOGYiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+DQogIDxwYXRoIGQ9Ik03NCA1MmwzMCAyMC0zMCAyNHoiIGZpbGw9IiM1YTRhOGYiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+DQogIDxwYXRoIGQ9Ik0xODIgNTJsLTMwIDIwIDMwIDI0eiIgZmlsbD0iIzVhNGE4ZiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4NCiAgPHBhdGggZD0iTTE5NiAxMTZsLTMwIDYgMTIgMzB6IiBmaWxsPSIjNWE0YThmIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPg0KICA8cGF0aCBkPSJNNjAgMTE2bDMwIDYtMTIgMzB6IiBmaWxsPSIjNWE0YThmIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPg0KICA8IS0tIEJvZHkgLS0+DQogIDxwYXRoIGQ9Ik03OCA4MmMwLTM4IDI0LTU4IDUwLTU4czUwIDIwIDUwIDU4YzAgNjAtMjIgODgtNTAgODhzLTUwLTI4LTUwLTg4eiIgZmlsbD0iIzhhNzRkNiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiLz4NCiAgPCEtLSBCZWxseSAtLT4NCiAgPGVsbGlwc2UgY3g9IjEyOCIgY3k9IjE1MCIgcng9IjI4IiByeT0iMjIiIGZpbGw9IiNjM2I0ZjAiIG9wYWNpdHk9IjAuODUiLz4NCiAgPCEtLSBFeWVzIC0tPg0KICA8cGF0aCBkPSJNOTYgMTA0YzgtMTAgMTYtMTAgMjIgMCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPg0KICA8cGF0aCBkPSJNMTM4IDEwNGM2LTEwIDE0LTEwIDIyIDAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4NCiAgPGNpcmNsZSBjeD0iMTA3IiBjeT0iMTEyIiByPSI2IiBmaWxsPSIjMmIxYjEyIi8+DQogIDxjaXJjbGUgY3g9IjE0OSIgY3k9IjExMiIgcj0iNiIgZmlsbD0iIzJiMWIxMiIvPg0KICA8IS0tIEFuZ3J5IGJyb3dzIC0tPg0KICA8cGF0aCBkPSJNOTQgOTBsMjAgNiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPg0KICA8cGF0aCBkPSJNMTYyIDkwbC0yMCA2IiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+DQogIDwhLS0gTW91dGggLS0+DQogIDxwYXRoIGQ9Ik0xMTIgMTM2YzEyLTEwIDIyLTEwIDMyIDAiIGZpbGw9IiMyYjFiMTIiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4NCiAgPCEtLSBUZWV0aCAtLT4NCiAgPHBhdGggZD0iTTExOCAxMzZsNSA5IDUtOSA1IDkgNS05IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+DQogIDwhLS0gRmVldCAtLT4NCiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjIwOCIgcng9IjIyIiByeT0iMTYiIGZpbGw9IiM1YTRhOGYiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4Ii8+DQogIDxlbGxpcHNlIGN4PSIxNTYiIGN5PSIyMDgiIHJ4PSIyMiIgcnk9IjE2IiBmaWxsPSIjNWE0YThmIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iOCIvPg0KPC9zdmc+DQo=","pickup":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2IiB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiI+DQogIDwhLS0gR2xvd2luZyBwYXBlciBsYW50ZXJuLiBGbGF0IGNhcnRvb24sIGRhcmsgb3V0bGluZS4gLS0+DQogIDwhLS0gU29mdCBnbG93IC0tPg0KICA8Y2lyY2xlIGN4PSIxMjgiIGN5PSIxNDIiIHI9Ijg0IiBmaWxsPSIjZmZkNjZiIiBvcGFjaXR5PSIwLjI4Ii8+DQogIDxjaXJjbGUgY3g9IjEyOCIgY3k9IjE0MiIgcj0iNjAiIGZpbGw9IiNmZmM5NGQiIG9wYWNpdHk9IjAuNCIvPg0KICA8IS0tIEhhbmdpbmcgc3RyaW5nIC0tPg0KICA8bGluZSB4MT0iMTI4IiB5MT0iMTYiIHgyPSIxMjgiIHkyPSI0NiIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPg0KICA8IS0tIFRvcCBjYXAgLS0+DQogIDxyZWN0IHg9IjkyIiB5PSI0NCIgd2lkdGg9IjcyIiBoZWlnaHQ9IjE4IiByeD0iOCIgZmlsbD0iI2U4NWQzZCIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiLz4NCiAgPCEtLSBSaWJzIC0tPg0KICA8cGF0aCBkPSJNMTEyIDYwYzAgNDIgMTYgNjggMTYgOTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q5OGEyYiIgc3Ryb2tlLXdpZHRoPSI2Ii8+DQogIDxwYXRoIGQ9Ik0xNDQgNjBjMCA0Mi0xNiA2OC0xNiA5NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDk4YTJiIiBzdHJva2Utd2lkdGg9IjYiLz4NCiAgPHBhdGggZD0iTTEyOCA2MHY5NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDk4YTJiIiBzdHJva2Utd2lkdGg9IjYiLz4NCiAgPCEtLSBMYW50ZXJuIGJvZHkgLS0+DQogIDxwYXRoIGQ9Ik04OCA2MmMwIDU0IDE4IDg0IDQwIDg0czQwLTMwIDQwLTg0YzAtNi04LTEyLTIwLTEyaC00MGMtMTIgMC0yMCA2LTIwIDEyeiIgZmlsbD0iI2ZmYzk0ZCIgc3Ryb2tlPSIjMmIxYjEyIiBzdHJva2Utd2lkdGg9IjgiLz4NCiAgPHBhdGggZD0iTTg4IDY2aDgwIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+DQogIDxwYXRoIGQ9Ik05MiAxNDZjMCA4IDggMTIgMTQgMTJoNDRjNiAwIDE0LTQgMTQtMTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJiMWIxMiIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4NCiAgPCEtLSBCb3R0b20gY2FwIC0tPg0KICA8cmVjdCB4PSI5NCIgeT0iMTUwIiB3aWR0aD0iNjgiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjZTg1ZDNkIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iOCIvPg0KICA8IS0tIFRhc3NlbCAtLT4NCiAgPGxpbmUgeDE9IjEyOCIgeTE9IjE2NiIgeDI9IjEyOCIgeTI9IjE5MiIgc3Ryb2tlPSIjZTg1ZDNkIiBzdHJva2Utd2lkdGg9IjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPg0KICA8cGF0aCBkPSJNMTIwIDE5MmM0IDEyIDEyIDEyIDE2IDB6IiBmaWxsPSIjZTg1ZDNkIiBzdHJva2U9IiMyYjFiMTIiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPg0KICA8IS0tIElubmVyIGdsb3cgLS0+DQogIDxlbGxpcHNlIGN4PSIxMjgiIGN5PSIxMTYiIHJ4PSIyMiIgcnk9IjMwIiBmaWxsPSIjZmZmM2M0IiBvcGFjaXR5PSIwLjkiLz4NCjwvc3ZnPg0K"}};</script>
+<script>/* 箭定乾坤 — 2D 单源单 Canvas 微信小游戏（零外链、100% 纯简体中文、逆向可解生成）
+ * 适配 @zseven-w/dsh-game-studio 双端导出（离线单文件 HTML + < 4 MB wx-minigame/）。
+ * 严禁创建 HTML DOM 元素；顶部严格避让微信右上角原生胶囊；满 100 UV 前激励视频走「首发限免」。 */
+(function () {
+  'use strict';
+
+  var GAME = (typeof window !== 'undefined' && window.GAME) || {};
+  var TITLE = GAME.title || '箭定乾坤';
+  var parentWindow = (typeof window !== 'undefined' && window.parent && window.parent !== window) ? window.parent : null;
+
+  function post(msg) {
+    if (!parentWindow) return;
+    msg.source = 'dsh-game-studio';
+    try { parentWindow.postMessage(msg, '*'); } catch (_e) {}
+  }
+  function reportError(text) { post({ type: 'error', message: String(text).slice(0, 300) }); }
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('error', function (ev) { reportError((ev && (ev.message || ev.error)) || 'error'); });
+    window.addEventListener('unhandledrejection', function (ev) {
+      var r = ev && ev.reason;
+      reportError((r && r.message) || r || 'unhandled rejection');
+    });
+  }
+
+  /* 1. 规则参数（可由 game.json 或 playtest rules 覆盖） */
+  var DEFAULTS = {
+    duration: 180,
+    hearts: 3,
+    level: 1,
+    mode: 'campaign',
+    tutorialEnabled: true,
+    hintCharges: 2,
+    removeCharges: 1,
+    gachaCost: 120
+  };
+  function resolveRules(raw) {
+    var out = {};
+    for (var k in DEFAULTS) out[k] = DEFAULTS[k];
+    if (raw && typeof raw === 'object') {
+      for (var rk in raw) {
+        if (rk in DEFAULTS) {
+          if (typeof DEFAULTS[rk] === 'number') {
+            var n = Number(raw[rk]);
+            if (isFinite(n)) out[rk] = n;
+          } else if (typeof DEFAULTS[rk] === 'boolean') {
+            out[rk] = !!raw[rk];
+          } else if (typeof DEFAULTS[rk] === 'string' && raw[rk]) {
+            out[rk] = String(raw[rk]);
+          }
+        }
+      }
+    }
+    out.duration = Math.max(2, out.duration);
+    out.hearts = Math.max(1, Math.round(out.hearts));
+    out.level = Math.max(1, Math.min(60, Math.round(out.level)));
+    return out;
+  }
+  var R = resolveRules(GAME.rules);
+
+  /* 2. 单 Canvas 与安全区坐标映射（逻辑 720x1280 竖屏） */
+  var W = 720;
+  var H = 1280;
+  var canvas = document.getElementById('game');
+  if (!canvas) canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
+  var dpr = 1;
+  var viewW = W;
+  var viewH = H;
+  var scale = 1;
+  var offsetX = 0;
+  var offsetY = 0;
+
+  function getSafeTopLogical() {
+    var cssTop = (GAME.safeArea && GAME.safeArea.topHudY)
+      || (typeof window !== 'undefined' && window.__wxSafeArea && window.__wxSafeArea.topHudY)
+      || 92;
+    var logicalTop = (cssTop - offsetY) / (scale || 1);
+    return Math.max(146, Math.min(220, Math.ceil(logicalTop + 10)));
+  }
+
+  function resize() {
+    var iw = (typeof window !== 'undefined' && window.innerWidth) || 390;
+    var ih = (typeof window !== 'undefined' && window.innerHeight) || 844;
+    dpr = Math.min(2, (typeof window !== 'undefined' && window.devicePixelRatio) || 1);
+    viewW = iw;
+    viewH = ih;
+    canvas.width = Math.max(1, Math.round(iw * dpr));
+    canvas.height = Math.max(1, Math.round(ih * dpr));
+    if (canvas.style) {
+      canvas.style.width = iw + 'px';
+      canvas.style.height = ih + 'px';
+    }
+    scale = Math.min(iw / W, ih / H);
+    offsetX = (iw - W * scale) * 0.5;
+    offsetY = (ih - H * scale) * 0.5;
+  }
+  resize();
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('resize', resize);
+  }
+
+  /* 3. 主题外观皮肤（五系统：灵玉箭坊 + 清阵印记） */
+  var SKINS = [
+    {
+      id: 'celadon',
+      name: '青瓷玉箭',
+      rarity: '默认',
+      rate: 0,
+      desc: '温润青瓷宣纸配羊脂玉盘',
+      bgTop: '#F3F6EE',
+      bgBot: '#E1EAD5',
+      boardFill: '#FCFBF5',
+      boardBorder: '#B7C9A8',
+      cellFill: '#F2F5EB',
+      titleColor: '#234236',
+      dirs: ['#2BAE85', '#F06A4B', '#3B8CE6', '#E9A626'],
+      dirsDark: ['#1E8262', '#C24A30', '#2666B5', '#BA7E12']
+    },
+    {
+      id: 'candy',
+      name: '绯红糖果',
+      rarity: '普通',
+      rate: 60,
+      desc: '奶油草莓果冻清甜色盘',
+      bgTop: '#FFF4F2',
+      bgBot: '#FFE0DB',
+      boardFill: '#FFFDFB',
+      boardBorder: '#E7B0A9',
+      cellFill: '#FBF0EE',
+      titleColor: '#6D2832',
+      dirs: ['#FF6F91', '#FF9671', '#6C8CFF', '#FFC75F'],
+      dirsDark: ['#CC4567', '#CF6945', '#4663CC', '#C99530']
+    },
+    {
+      id: 'starlight',
+      name: '星河琉璃',
+      rarity: '精良',
+      rate: 30,
+      desc: '晴夜月蓝与剔透琉璃流光',
+      bgTop: '#EEF4FF',
+      bgBot: '#D8E5FA',
+      boardFill: '#F9FBFF',
+      boardBorder: '#9EB6DF',
+      cellFill: '#EBF1FB',
+      titleColor: '#1E335A',
+      dirs: ['#38B2AC', '#F56565', '#4C6EF5', '#ECC94B'],
+      dirsDark: ['#248580', '#C53A3A', '#314DC2', '#BD9924']
+    },
+    {
+      id: 'bamboo',
+      name: '赤金墨竹',
+      rarity: '传说',
+      rate: 10,
+      desc: '玄金竹简配鎏金飞羽箭',
+      bgTop: '#F6F1E3',
+      bgBot: '#E5D9BC',
+      boardFill: '#FBF7EC',
+      boardBorder: '#C7A967',
+      cellFill: '#F2EAD6',
+      titleColor: '#3A2E1A',
+      dirs: ['#2E7D5B', '#C84B31', '#2B5B84', '#D49A2A'],
+      dirsDark: ['#1D583E', '#97311C', '#1B3D5B', '#A37015']
+    }
+  ];
+
+  /* 4. 持久化存储（自动桥接 wx.getStorageSync / localStorage） */
+  var SAVE_KEY = 'jdqk_save_v1';
+  var save = {
+    jade: 60,
+    maxLevel: 1,
+    bestCombo: 0,
+    clearedTotal: 0,
+    dailyDates: [],
+    unlockedSkins: ['celadon'],
+    skinId: 'celadon',
+    bgmOn: true,
+    sfxOn: true,
+    vibeOn: true,
+    tutorialDone: false
+  };
+  function loadSave() {
+    try {
+      var raw = (typeof localStorage !== 'undefined' && localStorage.getItem) ? localStorage.getItem(SAVE_KEY) : null;
+      if (!raw) return;
+      var parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return;
+      for (var k in save) {
+        if (parsed[k] !== undefined) save[k] = parsed[k];
+      }
+      if (!Array.isArray(save.unlockedSkins) || save.unlockedSkins.indexOf('celadon') === -1) {
+        save.unlockedSkins = ['celadon'];
+      }
+      if (!Array.isArray(save.dailyDates)) save.dailyDates = [];
+    } catch (_e) {}
+  }
+  function writeSave() {
+    try {
+      if (typeof localStorage !== 'undefined' && localStorage.setItem) {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(save));
+      }
+    } catch (_e) {}
+  }
+  loadSave();
+
+  function currentSkin() {
+    for (var i = 0; i < SKINS.length; i++) {
+      if (SKINS[i].id === save.skinId) return SKINS[i];
+    }
+    return SKINS[0];
+  }
+
+  /* 5. 音频（WebAudio PCM 缓冲采样 + 五声音阶 + iPhone 静音键兼容） */
+  if (typeof wx !== 'undefined' && wx && typeof wx.setInnerAudioOption === 'function') {
+    try { wx.setInnerAudioOption({ obeyMuteSwitch: false, mixWithOther: true }); } catch (_e) {}
+  }
+  var audioCtx = null;
+  var audioUnlocked = false;
+  var PENTA = [523.25, 587.33, 659.25, 783.99, 880.0, 1046.5, 1174.66, 1318.51];
+
+  function ensureAudio() {
+    if (audioCtx) {
+      if (audioCtx.state === 'suspended' && typeof audioCtx.resume === 'function') {
+        try { audioCtx.resume(); } catch (_e) {}
+      }
+      return audioCtx;
+    }
+    var Ctor = (typeof window !== 'undefined') && (window.AudioContext || window.webkitAudioContext);
+    if (!Ctor) return null;
+    try {
+      audioCtx = new Ctor();
+    } catch (_e) {
+      audioCtx = null;
+    }
+    return audioCtx;
+  }
+
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    var ac = ensureAudio();
+    if (!ac) return;
+    try {
+      var buf = ac.createBuffer(1, 1, 22050);
+      var src = ac.createBufferSource();
+      src.buffer = buf;
+      src.connect(ac.destination);
+      src.start(0);
+    } catch (_e) {}
+  }
+
+  function playPcmTone(freq, dur, vol, waveType) {
+    if (!save.sfxOn) return;
+    var ac = ensureAudio();
+    if (!ac || typeof ac.createBuffer !== 'function') return;
+    try {
+      var sr = ac.sampleRate || 22050;
+      var len = Math.max(1, Math.floor(sr * dur));
+      var buf = ac.createBuffer(1, len, sr);
+      var ch = buf.getChannelData(0);
+      for (var i = 0; i < len; i++) {
+        var t = i / sr;
+        var env = Math.exp(-t * (waveType === 'thud' ? 22 : 9.5)) * Math.min(1, i / 45);
+        var val = 0;
+        if (waveType === 'ice') {
+          var noise = (Math.sin(i * 12.9898) * 43758.5453) % 1;
+          val = (Math.sin(2 * Math.PI * freq * t) * 0.55 + noise * 0.45);
+        } else if (waveType === 'thud') {
+          var f = freq * Math.exp(-t * 10);
+          val = Math.sin(2 * Math.PI * f * t);
+        } else {
+          // 模拟清脆古筝/玉磬泛音
+          val = Math.sin(2 * Math.PI * freq * t) * 0.72
+            + Math.sin(2 * Math.PI * freq * 2 * t) * 0.22 * Math.exp(-t * 14)
+            + Math.sin(2 * Math.PI * freq * 3 * t) * 0.06 * Math.exp(-t * 20);
+        }
+        ch[i] = val * env * vol;
+      }
+      var src = ac.createBufferSource();
+      src.buffer = buf;
+      src.connect(ac.destination);
+      src.start(0);
+    } catch (_e) {}
+  }
+
+  function sfxFly(comboIdx) {
+    var note = PENTA[Math.min(PENTA.length - 1, Math.max(0, comboIdx - 1))];
+    playPcmTone(note, 0.24, 0.26, 'pluck');
+  }
+  function sfxBlocked() { playPcmTone(165, 0.14, 0.24, 'thud'); }
+  function sfxIce() { playPcmTone(1480, 0.16, 0.2, 'ice'); }
+  function sfxClick() { playPcmTone(660, 0.08, 0.16, 'pluck'); }
+  function sfxWin() {
+    playPcmTone(523.25, 0.28, 0.22, 'pluck');
+    setTimeout(function () { playPcmTone(659.25, 0.28, 0.22, 'pluck'); }, 90);
+    setTimeout(function () { playPcmTone(783.99, 0.34, 0.24, 'pluck'); }, 180);
+    setTimeout(function () { playPcmTone(1046.5, 0.46, 0.26, 'pluck'); }, 280);
+  }
+
+  function vibrate(type) {
+    if (!save.vibeOn) return;
+    if (typeof wx !== 'undefined' && wx && typeof wx.vibrateShort === 'function') {
+      try { wx.vibrateShort({ type: type || 'light' }); } catch (_e) {}
+    }
+  }
+
+  /* 6. 零插屏主动激励视频包装器（满 100 UV 前自动首发限免） */
+  function triggerRewardAd(slot, onSuccess) {
+    if (GAME && typeof GAME.watchRewardedAd === 'function') {
+      GAME.watchRewardedAd(slot, function () {
+        if (typeof onSuccess === 'function') onSuccess();
+      });
+      return;
+    }
+    showToast('首发限免已发放');
+    if (typeof onSuccess === 'function') onSuccess();
+  }
+
+  /* 7. 逆向拓扑可解生成算法（100% 保证无死局） */
+  // 方向编码：0=上(-1,0), 1=下(1,0), 2=左(0,-1), 3=右(0,1)
+  var DR = [-1, 1, 0, 0];
+  var DC = [0, 0, -1, 1];
+  var CW = [3, 2, 0, 1]; // 顺时针 90° 映射
+
+  function mulberry32(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6d2b79f5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function todaySeedInfo() {
+    var now = new Date();
+    var y = now.getFullYear();
+    var m = now.getMonth() + 1;
+    var d = now.getDate();
+    var tag = y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+    var num = y * 10000 + m * 100 + d;
+    return { tag: tag, seed: num };
+  }
+
+  function findBlockerInMap(map, gridSize, r, c, dir) {
+    var nr = r + DR[dir];
+    var nc = c + DC[dir];
+    while (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
+      var key = nr + ',' + nc;
+      if (map[key]) return map[key];
+      nr += DR[dir];
+      nc += DC[dir];
+    }
+    return null;
+  }
+
+  function solveBoardOrder(gridSize, arrowList) {
+    var sim = [];
+    var map = {};
+    for (var i = 0; i < arrowList.length; i++) {
+      var a = arrowList[i];
+      var copy = {
+        id: a.id,
+        r: a.r,
+        c: a.c,
+        dir: a.dir,
+        ice: a.ice || 0,
+        kind: a.kind || 'normal',
+        rotLeft: a.rotLeft || 0,
+        alive: true
+      };
+      sim.push(copy);
+      map[copy.r + ',' + copy.c] = copy;
+    }
+    var order = [];
+    var guard = sim.length * 4 + 10;
+    while (order.length < sim.length && guard-- > 0) {
+      var picked = null;
+      for (var j = 0; j < sim.length; j++) {
+        var cur = sim[j];
+        if (!cur.alive || cur.ice > 0) continue;
+        if (!findBlockerInMap(map, gridSize, cur.r, cur.c, cur.dir)) {
+          picked = cur;
+          break;
+        }
+        // 转向机关箭可在允许次数内转向寻路
+        if (cur.kind === 'rotator' && cur.rotLeft > 0) {
+          var testDir = cur.dir;
+          for (var t = 1; t <= cur.rotLeft; t++) {
+            testDir = CW[testDir];
+            if (!findBlockerInMap(map, gridSize, cur.r, cur.c, testDir)) {
+              cur.dir = testDir;
+              cur.rotLeft -= t;
+              picked = cur;
+              break;
+            }
+          }
+          if (picked) break;
+        }
+      }
+      if (!picked) return null;
+      picked.alive = false;
+      delete map[picked.r + ',' + picked.c];
+      order.push(picked.id);
+      // 触发 4 邻破冰（雷箭触发 8 邻破冰）
+      for (var dr = -1; dr <= 1; dr++) {
+        for (var dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          if (picked.kind !== 'bomb' && (Math.abs(dr) + Math.abs(dc) !== 1)) continue;
+          var nb = map[(picked.r + dr) + ',' + (picked.c + dc)];
+          if (nb && nb.ice > 0) nb.ice = Math.max(0, nb.ice - 1);
+        }
+      }
+    }
+    return order.length === sim.length ? order : null;
+  }
+
+  function levelSpec(level, mode) {
+    if (mode === 'daily') {
+      return { gridSize: 6, count: 24, iceCount: 3, bombCount: 2, goldCount: 2, rotCount: 2, reward: 150, label: '每日一局' };
+    }
+    if (level === 1) {
+      return { gridSize: 4, count: 6, iceCount: 0, bombCount: 0, goldCount: 1, rotCount: 0, reward: 30, label: '第 1 阵' };
+    }
+    if (level <= 3) {
+      return { gridSize: 5, count: 8 + level * 2, iceCount: 0, bombCount: 0, goldCount: 1, rotCount: 0, reward: 35 + level * 2, label: '第 ' + level + ' 阵' };
+    }
+    if (level <= 10) {
+      return { gridSize: 6, count: 14 + Math.min(10, level), iceCount: 2 + (level > 6 ? 1 : 0), bombCount: 0, goldCount: 2, rotCount: 0, reward: 45 + level * 2, label: '第 ' + level + ' 阵' };
+    }
+    if (level <= 25) {
+      return { gridSize: 7, count: 24 + Math.min(12, Math.floor((level - 10) * 0.8)), iceCount: 4, bombCount: 2, goldCount: 2, rotCount: 0, reward: 65 + Math.floor((level - 10) * 1.3), label: '第 ' + level + ' 阵' };
+    }
+    return { gridSize: 8, count: 34 + Math.min(14, Math.floor((level - 25) * 0.5)), iceCount: 5, bombCount: 3, goldCount: 3, rotCount: 3, reward: 90 + Math.min(30, level - 25), label: '第 ' + level + ' 阵' };
+  }
+
+  function buildLevelArrows(level, mode) {
+    var spec = levelSpec(level, mode);
+    var arrows = [];
+    var nextId = 1;
+
+    // 第 1 关：手工精调 4x4 教学阵（6 支箭），精准服务两步聚光灯引导
+    if (mode === 'campaign' && level === 1) {
+      var preset = [
+        { r: 0, c: 1, dir: 0, kind: 'normal', ice: 0, role: 'tut1' }, // 第 1 步畅通上箭
+        { r: 1, c: 2, dir: 3, kind: 'normal', ice: 0, role: 'tut2b' }, // 第 2 步挡路右箭
+        { r: 1, c: 1, dir: 3, kind: 'gold', ice: 0, role: 'tut2a' },   // 被 tut2b 挡住的鎏金箭
+        { r: 2, c: 1, dir: 2, kind: 'normal', ice: 0 },
+        { r: 2, c: 2, dir: 1, kind: 'normal', ice: 0 },
+        { r: 3, c: 0, dir: 2, kind: 'normal', ice: 0 }
+      ];
+      for (var p = 0; p < preset.length; p++) {
+        arrows.push({
+          id: nextId++,
+          r: preset[p].r,
+          c: preset[p].c,
+          dir: preset[p].dir,
+          kind: preset[p].kind,
+          ice: preset[p].ice,
+          rotLeft: 0,
+          role: preset[p].role || '',
+          alive: true,
+          shake: 0,
+          pop: 1,
+          hintGlow: 0
+        });
+      }
+      return { spec: spec, arrows: arrows };
+    }
+
+    var seed = mode === 'daily' ? todaySeedInfo().seed : (level * 7919 + 202611);
+    var rand = mulberry32(seed);
+    var cells = [];
+    for (var r = 0; r < spec.gridSize; r++) {
+      for (var c = 0; c < spec.gridSize; c++) cells.push({ r: r, c: c });
+    }
+    // Fisher-Yates 洗牌格子
+    for (var s = cells.length - 1; s > 0; s--) {
+      var sw = Math.floor(rand() * (s + 1));
+      var tmp = cells[s]; cells[s] = cells[sw]; cells[sw] = tmp;
+    }
+
+    var placedMap = {};
+    for (var ci = 0; ci < cells.length && arrows.length < spec.count; ci++) {
+      var cell = cells[ci];
+      var dirs = [0, 1, 2, 3];
+      for (var d = 3; d > 0; d--) {
+        var dw = Math.floor(rand() * (d + 1));
+        var dt = dirs[d]; dirs[d] = dirs[dw]; dirs[dw] = dt;
+      }
+      // 优先挑选能制造适度层叠阻挡但仍可解的方向，增强解谜趣味
+      var chosen = null;
+      for (var di = 0; di < 4; di++) {
+        var dir = dirs[di];
+        var cand = {
+          id: nextId,
+          r: cell.r,
+          c: cell.c,
+          dir: dir,
+          kind: 'normal',
+          ice: 0,
+          rotLeft: 0,
+          alive: true,
+          shake: 0,
+          pop: 1,
+          hintGlow: 0
+        };
+        arrows.push(cand);
+        if (solveBoardOrder(spec.gridSize, arrows)) {
+          chosen = cand;
+          break;
+        }
+        arrows.pop();
+      }
+      if (chosen) {
+        nextId++;
+        placedMap[chosen.r + ',' + chosen.c] = chosen;
+      }
+    }
+
+    // 按关卡配置安全附加特殊机关（每附一个都校验可解性）
+    function assignSpecial(count, mutator) {
+      var added = 0;
+      for (var k = arrows.length - 1; k >= 0 && added < count; k--) {
+        var target = arrows[k];
+        if (target.kind !== 'normal' || target.ice > 0) continue;
+        var prevKind = target.kind;
+        var prevIce = target.ice;
+        var prevRot = target.rotLeft;
+        mutator(target);
+        if (solveBoardOrder(spec.gridSize, arrows)) {
+          added++;
+        } else {
+          target.kind = prevKind;
+          target.ice = prevIce;
+          target.rotLeft = prevRot;
+        }
+      }
+    }
+
+    assignSpecial(spec.bombCount, function (a) { a.kind = 'bomb'; });
+    assignSpecial(spec.goldCount, function (a) { a.kind = 'gold'; });
+    assignSpecial(spec.rotCount, function (a) { a.kind = 'rotator'; a.rotLeft = 2; });
+    assignSpecial(spec.iceCount, function (a) { a.ice = 1 + (level >= 15 ? 1 : 0); });
+
+    return { spec: spec, arrows: arrows };
+  }
+
+  /* 8. 游戏运行状态机 */
+  var phase = 'title'; // 'title' | 'playing' | 'won' | 'lost'
+  var modal = null;    // null | 'settings' | 'shop' | 'codex'
+  var mode = R.mode === 'daily' ? 'daily' : 'campaign';
+  var level = Math.max(R.level, save.maxLevel || 1);
+  if (R.level === 1 && !save.tutorialDone) level = 1;
+  var boardSpec = null;
+  var arrows = [];
+  var flying = [];
+  var particles = [];
+  var floaters = [];
+  var hearts = R.hearts;
+  var timeLeft = R.duration;
+  var score = 0;
+  var combo = 0;
+  var comboTimer = 0;
+  var maxComboThisRun = 0;
+  var mistakes = 0;
+  var hintCharges = R.hintCharges;
+  var removeCharges = R.removeCharges;
+  var removeMode = false;
+  var doubleClaimed = false;
+  var reviveUsed = false;
+  var lastRewardEarned = 0;
+  var tutorialStep = 0; // 0=无教学, 1=聚光点最外上箭, 2=聚光先清挡路右箭
+  var toastText = '';
+  var toastTimer = 0;
+  var gachaBanner = '';
+  var screenShake = 0;
+  var elapsed = 0;
+  var fps = 60;
+  var fpsFrames = 0;
+  var fpsAccum = 0;
+  var lastTs = 0;
+  var btnAnim = {};
+  var activeButtons = [];
+
+  var CHEERS = ['稳了！', '一把清场！', '丝滑破阵！', '神箭连发！', '乾坤清朗！'];
+
+  function showToast(msg) {
+    toastText = String(msg);
+    toastTimer = 2.0;
+  }
+
+  function aliveCount() {
+    var c = 0;
+    for (var i = 0; i < arrows.length; i++) if (arrows[i].alive) c++;
+    return c;
+  }
+
+  function getBoardRect() {
+    var safeTop = getSafeTopLogical();
+    var hudBottom = safeTop + 92;
+    var availH = 975 - hudBottom;
+    var size = Math.min(632, availH);
+    var bx = (W - size) * 0.5;
+    var by = hudBottom + Math.max(18, (availH - size) * 0.5);
+    return { x: bx, y: by, size: size };
+  }
+
+  function cellCenter(r, c) {
+    var rect = getBoardRect();
+    var pad = 20;
+    var inner = rect.size - pad * 2;
+    var cell = inner / boardSpec.gridSize;
+    return {
+      x: rect.x + pad + (c + 0.5) * cell,
+      y: rect.y + pad + (r + 0.5) * cell,
+      cell: cell
+    };
+  }
+
+  function startLevel(targetLevel, targetMode) {
+    mode = targetMode || 'campaign';
+    level = mode === 'daily' ? 1 : Math.max(1, Math.min(60, targetLevel));
+    var built = buildLevelArrows(level, mode);
+    boardSpec = built.spec;
+    arrows = built.arrows;
+    flying = [];
+    particles = [];
+    floaters = [];
+    hearts = R.hearts;
+    timeLeft = R.duration;
+    score = 0;
+    combo = 0;
+    comboTimer = 0;
+    maxComboThisRun = 0;
+    mistakes = 0;
+    hintCharges = R.hintCharges;
+    removeCharges = R.removeCharges;
+    removeMode = false;
+    doubleClaimed = false;
+    reviveUsed = false;
+    lastRewardEarned = 0;
+    modal = null;
+    phase = 'playing';
+    tutorialStep = (mode === 'campaign' && level === 1 && R.tutorialEnabled && !save.tutorialDone) ? 1 : 0;
+  }
+
+  function spawnParticles(x, y, colorHex, count) {
+    for (var i = 0; i < count; i++) {
+      var ang = Math.random() * Math.PI * 2;
+      var spd = 90 + Math.random() * 260;
+      particles.push({
+        x: x,
+        y: y,
+        vx: Math.cos(ang) * spd,
+        vy: Math.sin(ang) * spd,
+        r: 4 + Math.random() * 6,
+        color: colorHex,
+        life: 0.45 + Math.random() * 0.25,
+        maxLife: 0.7
+      });
+    }
+  }
+
+  function addFloater(x, y, text, colorHex) {
+    floaters.push({ x: x, y: y, text: text, color: colorHex || '#234236', life: 0.95, maxLife: 0.95 });
+  }
+
+  function currentArrowMap() {
+    var m = {};
+    for (var i = 0; i < arrows.length; i++) {
+      if (arrows[i].alive) m[arrows[i].r + ',' + arrows[i].c] = arrows[i];
+    }
+    return m;
+  }
+
+  function launchArrow(arrow, forced) {
+    var pos = cellCenter(arrow.r, arrow.c);
+    var skin = currentSkin();
+    var col = skin.dirs[arrow.dir];
+    arrow.alive = false;
+    combo++;
+    comboTimer = arrow.kind === 'gold' ? 4.5 : 3.0;
+    if (combo > maxComboThisRun) maxComboThisRun = combo;
+
+    var pts = (arrow.kind === 'gold' ? 30 : 10) + Math.min(50, (combo - 1) * 5);
+    score += pts;
+    var bonusJade = (arrow.kind === 'gold' ? 6 : 0) + (combo >= 3 ? 2 : 0);
+    if (bonusJade > 0) save.jade += bonusJade;
+
+    flying.push({
+      x: pos.x,
+      y: pos.y,
+      cell: pos.cell,
+      dir: arrow.dir,
+      kind: arrow.kind,
+      vx: DC[arrow.dir] * 1450,
+      vy: DR[arrow.dir] * 1450,
+      trail: [{ x: pos.x, y: pos.y }]
+    });
+    spawnParticles(pos.x, pos.y, col, arrow.kind === 'bomb' ? 20 : 12);
+    sfxFly(combo);
+    vibrate(combo >= 3 ? 'medium' : 'light');
+
+    if (combo >= 3) {
+      addFloater(pos.x, pos.y - 26, '连清 ×' + combo, '#D97706');
+    } else if (arrow.kind === 'gold') {
+      addFloater(pos.x, pos.y - 24, '鎏金 +6 灵玉', '#C88A14');
+    } else if (forced) {
+      addFloater(pos.x, pos.y - 24, '破阵抽离！', '#2BAE85');
+    }
+
+    // 破冰联动：普通箭解 4 邻，雷箭震碎 8 邻
+    var map = currentArrowMap();
+    var cracked = false;
+    for (var dr = -1; dr <= 1; dr++) {
+      for (var dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        if (arrow.kind !== 'bomb' && (Math.abs(dr) + Math.abs(dc) !== 1)) continue;
+        var nb = map[(arrow.r + dr) + ',' + (arrow.c + dc)];
+        if (nb && nb.ice > 0) {
+          nb.ice = Math.max(0, nb.ice - 1);
+          cracked = true;
+          var npos = cellCenter(nb.r, nb.c);
+          spawnParticles(npos.x, npos.y, '#9AD8F5', 10);
+          if (nb.ice === 0) addFloater(npos.x, npos.y - 16, '破冰解锁', '#2575B8');
+        }
+      }
+    }
+    if (cracked) sfxIce();
+
+    // 推进两步聚光灯教学
+    if (tutorialStep === 1 && arrow.role === 'tut1') {
+      tutorialStep = 2;
+    } else if (tutorialStep === 2 && arrow.role === 'tut2b') {
+      tutorialStep = 0;
+      save.tutorialDone = true;
+      writeSave();
+      showToast('已掌握精髓，一口气清空玉盘！');
+    }
+
+    // 胜利判定
+    if (aliveCount() === 0) {
+      phase = 'won';
+      tutorialStep = 0;
+      toastTimer = 0;
+      floaters = [];
+      save.tutorialDone = true;
+      lastRewardEarned = boardSpec.reward;
+      save.jade += lastRewardEarned;
+      save.clearedTotal += 1;
+      if (maxComboThisRun > save.bestCombo) save.bestCombo = maxComboThisRun;
+      if (mode === 'campaign' && level >= save.maxLevel && level < 60) {
+        save.maxLevel = level + 1;
+      }
+      if (mode === 'daily') {
+        var td = todaySeedInfo().tag;
+        if (save.dailyDates.indexOf(td) === -1) save.dailyDates.push(td);
+      }
+      writeSave();
+      sfxWin();
+      vibrate('medium');
+      spawnParticles(W * 0.5, H * 0.42, '#FFD452', 36);
+      spawnParticles(W * 0.5, H * 0.42, '#2BAE85', 24);
+    }
+  }
+
+  function handleArrowTap(arrow) {
+    if (!arrow || !arrow.alive || phase !== 'playing') return;
+
+    // 聚光灯教学期锁死无关箭块
+    if (tutorialStep === 1 && arrow.role !== 'tut1') {
+      showToast('先点金色光圈里的箭试试');
+      return;
+    }
+    if (tutorialStep === 2 && arrow.role !== 'tut2b') {
+      showToast('先清掉前方挡路的箭块');
+      return;
+    }
+
+    // 破阵抽离模式：无视冰封与阻挡强制移除
+    if (removeMode) {
+      removeMode = false;
+      removeCharges = Math.max(0, removeCharges - 1);
+      arrow.ice = 0;
+      launchArrow(arrow, true);
+      return;
+    }
+
+    // 冰封拦截
+    if (arrow.ice > 0) {
+      arrow.shake = 0.28;
+      sfxBlocked();
+      vibrate('light');
+      showToast('先清周围相邻箭即可破冰');
+      return;
+    }
+
+    var map = currentArrowMap();
+    var blocker = findBlockerInMap(map, boardSpec.gridSize, arrow.r, arrow.c, arrow.dir);
+    if (!blocker) {
+      launchArrow(arrow, false);
+      return;
+    }
+
+    // 转向机关箭：受阻时不扣心，原地顺时针旋转 90°
+    if (arrow.kind === 'rotator' && arrow.rotLeft > 0) {
+      arrow.dir = CW[arrow.dir];
+      arrow.rotLeft -= 1;
+      arrow.pop = 1.24;
+      sfxClick();
+      vibrate('light');
+      var rpos = cellCenter(arrow.r, arrow.c);
+      addFloater(rpos.x, rpos.y - 20, '转向成功', '#2BAE85');
+      return;
+    }
+
+    // 普通受阻：弹回 + 扣心
+    arrow.shake = 0.34;
+    blocker.shake = 0.16;
+    combo = 0;
+    comboTimer = 0;
+    mistakes++;
+    sfxBlocked();
+    vibrate('medium');
+    screenShake = 0.18;
+    if (tutorialStep === 0) {
+      hearts = Math.max(0, hearts - 1);
+      var bpos = cellCenter(arrow.r, arrow.c);
+      addFloater(bpos.x, bpos.y - 20, '前方受阻 -1 心', '#D9483B');
+      if (hearts <= 0) {
+        phase = 'lost';
+        toastTimer = 0;
+        floaters = [];
+      }
+    }
+  }
+
+  function useHintTool() {
+    if (phase !== 'playing') return;
+    if (hintCharges <= 0) {
+      triggerRewardAd('powerup', function () {
+        hintCharges += 2;
+        showToast('已补充天眼指路 ×2');
+        useHintTool();
+      });
+      return;
+    }
+    var remaining = arrows.filter(function (a) { return a.alive; });
+    var order = solveBoardOrder(boardSpec.gridSize, remaining);
+    if (!order || !order.length) {
+      showToast('试试破阵抽离打开局面');
+      return;
+    }
+    hintCharges--;
+    sfxClick();
+    var topIds = order.slice(0, 3);
+    for (var i = 0; i < arrows.length; i++) {
+      if (topIds.indexOf(arrows[i].id) !== -1) arrows[i].hintGlow = 3.6;
+    }
+    showToast('金色光环为推荐出箭顺序');
+  }
+
+  function useRemoveTool() {
+    if (phase !== 'playing') return;
+    if (removeMode) {
+      removeMode = false;
+      showToast('已取消破阵抽离');
+      return;
+    }
+    if (removeCharges <= 0) {
+      triggerRewardAd('powerup', function () {
+        removeCharges += 1;
+        removeMode = true;
+        showToast('请点击任意一支箭直接抽离');
+      });
+      return;
+    }
+    removeMode = true;
+    sfxClick();
+    showToast('抽离已就绪：点任意箭直接清出');
+  }
+
+  function performGacha() {
+    if (save.jade < R.gachaCost) {
+      showToast('灵玉不足，通关即可免费获取');
+      sfxBlocked();
+      return;
+    }
+    save.jade -= R.gachaCost;
+    var roll = Math.random() * 100;
+    var pick = roll < 60 ? SKINS[1] : (roll < 90 ? SKINS[2] : SKINS[3]);
+    if (save.unlockedSkins.indexOf(pick.id) === -1) {
+      save.unlockedSkins.push(pick.id);
+      save.skinId = pick.id;
+      gachaBanner = '喜获「' + pick.name + '」（' + pick.rarity + '），已自动换装！';
+    } else {
+      save.jade += 60;
+      gachaBanner = '抽中已有「' + pick.name + '」，自动返还 60 灵玉';
+    }
+    writeSave();
+    sfxWin();
+    vibrate('medium');
+  }
+
+  /* 9. 按钮系统（带果冻缩放动画） */
+  function registerBtn(id, x, y, w, h, action) {
+    activeButtons.push({ id: id, x: x, y: y, w: w, h: h, action: action });
+  }
+  function pressBtnAnim(id) { btnAnim[id] = 1.0; }
+  function getBtnScale(id) {
+    var t = btnAnim[id] || 0;
+    if (t <= 0) return 1;
+    if (t > 0.5) return 1 - (1 - (t - 0.5) * 2) * 0.08;
+    return 1 + Math.sin((t / 0.5) * Math.PI) * 0.04;
+  }
+
+  /* 10. 绘图工具（纯 Canvas 2D，圆角/果冻立体质感） */
+  function rr(x, y, w, h, r) {
+    var rad = Math.min(r, w * 0.5, h * 0.5);
+    ctx.beginPath();
+    ctx.moveTo(x + rad, y);
+    ctx.lineTo(x + w - rad, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + rad);
+    ctx.lineTo(x + w, y + h - rad);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+    ctx.lineTo(x + rad, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - rad);
+    ctx.lineTo(x, y + rad);
+    ctx.quadraticCurveTo(x, y, x + rad, y);
+    ctx.closePath();
+  }
+
+  function drawJellyButton(id, x, y, w, h, label, sub, fill, darkFill, textColor, action) {
+    registerBtn(id, x, y, w, h, action);
+    var sc = getBtnScale(id);
+    ctx.save();
+    ctx.translate(x + w * 0.5, y + h * 0.5);
+    ctx.scale(sc, sc);
+    ctx.translate(-w * 0.5, -h * 0.5);
+
+    // 底部立体厚边
+    rr(0, 6, w, h, 22);
+    ctx.fillStyle = darkFill;
+    ctx.fill();
+
+    // 主体
+    rr(0, 0, w, h, 22);
+    ctx.fillStyle = fill;
+    ctx.fill();
+
+    // 顶部柔和果冻高光
+    rr(10, 5, w - 20, h * 0.34, 14);
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    ctx.fill();
+
+    ctx.fillStyle = textColor || '#FFFFFF';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    if (sub) {
+      ctx.font = 'bold 26px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(label, w * 0.5, h * 0.40);
+      ctx.font = '600 18px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.globalAlpha = 0.9;
+      ctx.fillText(sub, w * 0.5, h * 0.72);
+    } else {
+      ctx.font = 'bold 30px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(label, w * 0.5, h * 0.52);
+    }
+    ctx.restore();
+  }
+
+  function drawArrowTile(g, cx, cy, size, dir, kind, ice, rotLeft, skin, glowAlpha) {
+    var pad = size * 0.08;
+    var s = size - pad * 2;
+    var half = s * 0.5;
+    var fill = skin.dirs[dir];
+    var dark = skin.dirsDark[dir];
+    if (kind === 'gold') { fill = '#F2B93B'; dark = '#B57B0D'; }
+    if (kind === 'bomb') { fill = '#E05252'; dark = '#9C2727'; }
+
+    g.save();
+    g.translate(cx, cy);
+
+    if (glowAlpha > 0) {
+      g.save();
+      g.globalAlpha = glowAlpha;
+      g.beginPath();
+      g.arc(0, 0, half * 1.18, 0, Math.PI * 2);
+      g.strokeStyle = '#FFD452';
+      g.lineWidth = 7;
+      g.stroke();
+      g.restore();
+    }
+
+    // 立体底边阴影
+    rrPath(g, -half, -half + 5, s, s, s * 0.24);
+    g.fillStyle = dark;
+    g.fill();
+
+    // 箭块主体
+    rrPath(g, -half, -half, s, s, s * 0.24);
+    g.fillStyle = fill;
+    g.fill();
+
+    // 顶部琉璃高光
+    rrPath(g, -half + s * 0.1, -half + s * 0.07, s * 0.8, s * 0.30, s * 0.14);
+    g.fillStyle = 'rgba(255,255,255,0.28)';
+    g.fill();
+
+    // 旋转方向绘制高辨识白色箭头
+    g.save();
+    var angles = [-Math.PI * 0.5, Math.PI * 0.5, Math.PI, 0];
+    g.rotate(angles[dir]);
+    g.fillStyle = '#FFFFFF';
+    g.beginPath();
+    var aw = s * 0.27;
+    var ah = s * 0.25;
+    g.moveTo(aw, 0);
+    g.lineTo(-aw * 0.15, -ah);
+    g.lineTo(-aw * 0.15, -ah * 0.42);
+    g.lineTo(-aw, -ah * 0.42);
+    g.lineTo(-aw, ah * 0.42);
+    g.lineTo(-aw * 0.15, ah * 0.42);
+    g.lineTo(-aw * 0.15, ah);
+    g.closePath();
+    g.fill();
+    g.restore();
+
+    // 特殊机关徽标
+    if (kind === 'gold') {
+      g.fillStyle = '#FFF9DB';
+      g.font = 'bold ' + Math.round(s * 0.24) + 'px sans-serif';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText('★', half - s * 0.20, -half + s * 0.22);
+    } else if (kind === 'bomb') {
+      g.fillStyle = '#FFE066';
+      g.font = 'bold ' + Math.round(s * 0.24) + 'px sans-serif';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText('雷', half - s * 0.22, -half + s * 0.24);
+    } else if (kind === 'rotator' && rotLeft > 0) {
+      g.strokeStyle = '#FFFFFF';
+      g.lineWidth = 3;
+      g.beginPath();
+      g.arc(half - s * 0.22, -half + s * 0.22, s * 0.13, 0, Math.PI * 1.6);
+      g.stroke();
+    }
+
+    // 冰封覆盖层
+    if (ice > 0) {
+      rrPath(g, -half, -half, s, s, s * 0.24);
+      g.fillStyle = 'rgba(154,216,245,0.58)';
+      g.fill();
+      g.strokeStyle = '#FFFFFF';
+      g.lineWidth = 3;
+      g.stroke();
+
+      g.fillStyle = '#145374';
+      g.beginPath();
+      g.arc(half - s * 0.22, -half + s * 0.22, s * 0.19, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = '#FFFFFF';
+      g.font = 'bold ' + Math.round(s * 0.24) + 'px sans-serif';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText(String(ice), half - s * 0.22, -half + s * 0.23);
+    }
+
+    g.restore();
+  }
+
+  function rrPath(g, x, y, w, h, r) {
+    var rad = Math.min(r, w * 0.5, h * 0.5);
+    g.beginPath();
+    g.moveTo(x + rad, y);
+    g.lineTo(x + w - rad, y);
+    g.quadraticCurveTo(x + w, y, x + w, y + rad);
+    g.lineTo(x + w, y + h - rad);
+    g.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+    g.lineTo(x + rad, y + h);
+    g.quadraticCurveTo(x, y + h, x, y + h - rad);
+    g.lineTo(x, y + rad);
+    g.quadraticCurveTo(x, y, x + rad, y);
+    g.closePath();
+  }
+
+  /* 11. 侧栏与试玩角色特写导出（window.__renderSlots） */
+  function drawSlotPreview(slot, size) {
+    var cv = document.createElement('canvas');
+    cv.width = size;
+    cv.height = size;
+    var g = cv.getContext('2d');
+    var skin = currentSkin();
+    if (slot === 'hero') {
+      drawArrowTile(g, size * 0.5, size * 0.5, size * 0.82, 0, 'normal', 0, 0, skin, 0);
+    } else if (slot === 'enemy') {
+      drawArrowTile(g, size * 0.5, size * 0.5, size * 0.82, 3, 'bomb', 2, 0, skin, 0);
+    } else {
+      // 灵玉图标
+      g.save();
+      g.translate(size * 0.5, size * 0.5);
+      g.beginPath();
+      g.moveTo(0, -size * 0.36);
+      g.lineTo(size * 0.28, 0);
+      g.lineTo(0, size * 0.36);
+      g.lineTo(-size * 0.28, 0);
+      g.closePath();
+      g.fillStyle = '#2BAE85';
+      g.fill();
+      g.lineWidth = size * 0.04;
+      g.strokeStyle = '#FFD452';
+      g.stroke();
+      g.beginPath();
+      g.moveTo(0, -size * 0.22);
+      g.lineTo(size * 0.14, 0);
+      g.lineTo(0, size * 0.10);
+      g.lineTo(-size * 0.14, 0);
+      g.closePath();
+      g.fillStyle = 'rgba(255,255,255,0.45)';
+      g.fill();
+      g.restore();
+    }
+    try { return cv.toDataURL('image/png'); } catch (_e) { return ''; }
+  }
+
+  window.__renderSlots = function (size) {
+    var s = size || 256;
+    return {
+      hero: drawSlotPreview('hero', s),
+      enemy: drawSlotPreview('enemy', s),
+      pickup: drawSlotPreview('pickup', s)
+    };
+  };
+
+  /* 12. 画面绘制（标题页 / 局内 / 聚光灯教学 / 结算 / 五系统弹窗） */
+  function drawBackground(skin) {
+    // 淡雅宣纸装饰圆晕（整屏底色已在 render 铺满，消除超长屏接缝）
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.34)';
+    ctx.beginPath();
+    ctx.arc(110, 260, 140, 0, Math.PI * 2);
+    ctx.arc(620, 960, 170, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawTitleScreen(skin) {
+    var safeTop = getSafeTopLogical();
+
+    // 左上角灵玉牌（彻底避开右上角微信胶囊）
+    rr(34, safeTop, 198, 56, 28);
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.fill();
+    ctx.strokeStyle = skin.boardBorder;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = skin.titleColor;
+    ctx.font = 'bold 26px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('◆ 灵玉 ' + save.jade, 56, safeTop + 29);
+
+    // 中央玉盘主视觉预览
+    var cardY = safeTop + 94;
+    rr(96, cardY, 528, 346, 36);
+    ctx.fillStyle = skin.boardFill;
+    ctx.fill();
+    ctx.strokeStyle = skin.boardBorder;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // 4 枚微浮动示范灵箭
+    var bob = Math.sin(elapsed * 2.4) * 5;
+    drawArrowTile(ctx, 240, cardY + 115 + bob, 92, 0, 'normal', 0, 0, skin, 0);
+    drawArrowTile(ctx, 360, cardY + 115 - bob, 92, 3, 'gold', 0, 0, skin, 0.35);
+    drawArrowTile(ctx, 480, cardY + 115 + bob, 92, 1, 'normal', 0, 0, skin, 0);
+    drawArrowTile(ctx, 300, cardY + 230 - bob, 92, 2, 'normal', 0, 0, skin, 0);
+    drawArrowTile(ctx, 420, cardY + 230 + bob, 92, 0, 'bomb', 1, 0, skin, 0);
+
+    // 主界面纯中文立体标题（与微信后台注册名一字不差）
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '900 82px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillStyle = 'rgba(0,0,0,0.10)';
+    ctx.fillText(TITLE, W * 0.5, cardY + 422);
+    ctx.fillStyle = skin.titleColor;
+    ctx.fillText(TITLE, W * 0.5, cardY + 416);
+
+    ctx.font = '600 28px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillStyle = '#536A5C';
+    ctx.fillText('点按飞箭 · 连清全盘 · 每日千人同盘', W * 0.5, cardY + 478);
+
+    // 主操作按钮（点击直入第 1 关 / 当前关，绝不绕路）
+    var btnY = cardY + 536;
+    var nextLv = R.level > 1 ? R.level : (save.tutorialDone ? Math.min(60, save.maxLevel || 1) : 1);
+    drawJellyButton(
+      'start_campaign',
+      110, btnY, 500, 102,
+      save.tutorialDone ? ('继续破阵 · 第 ' + nextLv + ' 阵') : '立即开局 · 第 1 阵',
+      '单手点按，三秒极速解压',
+      '#2BAE85', '#1D7F60', '#FFFFFF',
+      function () { startLevel(nextLv, 'campaign'); }
+    );
+
+    drawJellyButton(
+      'start_daily',
+      110, btnY + 128, 500, 86,
+      '每日一局 · 今日同盘',
+      '通关奖 150 灵玉与今日勋章',
+      '#E9A626', '#B37A10', '#FFFFFF',
+      function () { startLevel(1, 'daily'); }
+    );
+
+    // 五系统入口：灵玉箭坊 + 清阵印记 + 设置
+    var subY = btnY + 242;
+    drawJellyButton('open_shop', 110, subY, 154, 78, '灵玉箭坊', null, '#F06A4B', '#BD462B', '#FFFFFF', function () {
+      gachaBanner = '';
+      modal = 'shop';
+      sfxClick();
+    });
+    drawJellyButton('open_codex', 283, subY, 154, 78, '清阵印记', null, '#3B8CE6', '#2564AD', '#FFFFFF', function () {
+      modal = 'codex';
+      sfxClick();
+    });
+    drawJellyButton('open_settings_home', 456, subY, 154, 78, '声音设置', null, '#607D70', '#41574D', '#FFFFFF', function () {
+      modal = 'settings';
+      sfxClick();
+    });
+  }
+
+  function drawHud(skin) {
+    var safeTop = getSafeTopLogical();
+    // 顶部信息栏全部从 safeTop (>=146) 开始，彻底避让右上角微信胶囊！
+    // 左：关卡与灵玉
+    rr(30, safeTop, 224, 76, 22);
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fill();
+    ctx.strokeStyle = skin.boardBorder;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = skin.titleColor;
+    ctx.font = 'bold 26px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(boardSpec.label, 48, safeTop + 26);
+    ctx.fillStyle = '#2BAE85';
+    ctx.font = 'bold 22px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('◆ ' + save.jade + ' 灵玉', 48, safeTop + 55);
+
+    // 中：容错红心与倒计时
+    rr(268, safeTop, 214, 76, 22);
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fill();
+    ctx.strokeStyle = skin.boardBorder;
+    ctx.stroke();
+
+    var heartsStr = '';
+    for (var h = 0; h < R.hearts; h++) heartsStr += (h < hearts ? '♥' : '♡');
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#E05252';
+    ctx.font = 'bold 28px sans-serif';
+    ctx.fillText(heartsStr, 375, safeTop + 26);
+    ctx.fillStyle = timeLeft <= 20 ? '#D9483B' : '#536A5C';
+    ctx.font = 'bold 22px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(tutorialStep > 0 ? '引导暂停计时' : ('剩余 ' + Math.ceil(timeLeft) + ' 秒'), 375, safeTop + 55);
+
+    // 右：设置与主页（均位于 safeTop 下方，完全远离胶囊）
+    drawJellyButton('btn_settings', 496, safeTop + 4, 96, 68, '设置', null, '#607D70', '#41574D', '#FFFFFF', function () {
+      modal = 'settings';
+      sfxClick();
+    });
+    drawJellyButton('btn_home', 602, safeTop + 4, 88, 68, '主页', null, '#8CA196', '#62766C', '#FFFFFF', function () {
+      phase = 'title';
+      modal = null;
+      sfxClick();
+    });
+  }
+
+  function drawBoardAndArrows(skin) {
+    var rect = getBoardRect();
+    var pad = 20;
+    var inner = rect.size - pad * 2;
+    var cell = inner / boardSpec.gridSize;
+
+    // 玉盘底板
+    rr(rect.x, rect.y + 8, rect.size, rect.size, 32);
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fill();
+
+    rr(rect.x, rect.y, rect.size, rect.size, 32);
+    ctx.fillStyle = skin.boardFill;
+    ctx.fill();
+    ctx.strokeStyle = removeMode ? '#E05252' : skin.boardBorder;
+    ctx.lineWidth = removeMode ? 5 : 4;
+    ctx.stroke();
+
+    // 淡雅棋格底槽
+    for (var r = 0; r < boardSpec.gridSize; r++) {
+      for (var c = 0; c < boardSpec.gridSize; c++) {
+        var gx = rect.x + pad + c * cell + 5;
+        var gy = rect.y + pad + r * cell + 5;
+        rr(gx, gy, cell - 10, cell - 10, Math.min(18, cell * 0.22));
+        ctx.fillStyle = skin.cellFill;
+        ctx.fill();
+      }
+    }
+
+    // 静止箭块
+    for (var i = 0; i < arrows.length; i++) {
+      var a = arrows[i];
+      if (!a.alive) continue;
+      var pos = cellCenter(a.r, a.c);
+      var sx = a.shake > 0 ? Math.sin(a.shake * 70) * 8 : 0;
+      var glow = a.hintGlow > 0 ? (0.55 + Math.sin(elapsed * 10) * 0.35) : 0;
+      ctx.save();
+      ctx.translate(pos.x + sx, pos.y);
+      ctx.scale(a.pop, a.pop);
+      drawArrowTile(ctx, 0, 0, pos.cell, a.dir, a.kind, a.ice, a.rotLeft, skin, glow);
+      ctx.restore();
+    }
+
+    // 飞出流光箭块
+    for (var f = 0; f < flying.length; f++) {
+      var fl = flying[f];
+      if (fl.trail.length > 1) {
+        ctx.save();
+        ctx.strokeStyle = skin.dirs[fl.dir];
+        ctx.lineWidth = fl.cell * 0.22;
+        ctx.lineCap = 'round';
+        ctx.globalAlpha = 0.28;
+        ctx.beginPath();
+        ctx.moveTo(fl.trail[0].x, fl.trail[0].y);
+        for (var ti = 1; ti < fl.trail.length; ti++) ctx.lineTo(fl.trail[ti].x, fl.trail[ti].y);
+        ctx.stroke();
+        ctx.restore();
+      }
+      drawArrowTile(ctx, fl.x, fl.y, fl.cell * 0.92, fl.dir, fl.kind, 0, 0, skin, 0);
+    }
+
+    // 底部状态提示条
+    var statusY = 1018;
+    rr(56, statusY - 30, W - 112, 60, 30);
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.fill();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = 'bold 26px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillStyle = removeMode ? '#D9483B' : skin.titleColor;
+    var statusLabel = removeMode
+      ? '抽离模式：轻点任意箭块直接移出'
+      : (combo >= 2
+        ? ('连清 ×' + combo + ' · 剩余 ' + aliveCount() + ' 支灵箭')
+        : ('剩余 ' + aliveCount() + ' 支灵箭 · 顺方向清空全盘'));
+    ctx.fillText(statusLabel, W * 0.5, statusY);
+
+    // 底部 3 枚大果冻道具按钮（零强制插屏，用尽后主动触发激励视频/首发限免）
+    var toolY = 1094;
+    var hintSub = hintCharges > 0 ? ('剩余 ' + hintCharges + ' 次') : '首发限免补充';
+    var remSub = removeMode ? '点击取消' : (removeCharges > 0 ? ('剩余 ' + removeCharges + ' 次') : '首发限免补充');
+    drawJellyButton('tool_hint', 40, toolY, 204, 108, '天眼指路', hintSub, '#3B8CE6', '#2463AC', '#FFFFFF', useHintTool);
+    drawJellyButton('tool_remove', 258, toolY, 204, 108, '破阵抽离', remSub, removeMode ? '#D9483B' : '#E9A626', removeMode ? '#9C2727' : '#B37A10', '#FFFFFF', useRemoveTool);
+    drawJellyButton('tool_retry', 476, toolY, 204, 108, '重开本阵', '免费刷新', '#2BAE85', '#1C7E5F', '#FFFFFF', function () {
+      sfxClick();
+      startLevel(level, mode);
+    });
+  }
+
+  function drawSpotlightTutorial() {
+    if (phase !== 'playing' || modal || tutorialStep <= 0) return;
+    var targetRole = tutorialStep === 1 ? 'tut1' : 'tut2b';
+    var target = null;
+    var blocked = null;
+    for (var i = 0; i < arrows.length; i++) {
+      if (arrows[i].role === targetRole && arrows[i].alive) target = arrows[i];
+      if (arrows[i].role === 'tut2a' && arrows[i].alive) blocked = arrows[i];
+    }
+    if (!target) { tutorialStep = 0; return; }
+    var pos = cellCenter(target.r, target.c);
+    var pulse = 1 + Math.sin(elapsed * 6) * 0.08;
+
+    ctx.save();
+    // 柔暗遮罩，留出目标高亮（覆盖超长屏边缘）
+    ctx.fillStyle = 'rgba(18, 32, 26, 0.42)';
+    ctx.fillRect(-200, -400, W + 400, H + 800);
+
+    // 第 2 步顺带虚线标出挡路关系
+    if (tutorialStep === 2 && blocked) {
+      var bpos = cellCenter(blocked.r, blocked.c);
+      drawArrowTile(ctx, bpos.x, bpos.y, bpos.cell, blocked.dir, blocked.kind, 0, 0, currentSkin(), 0);
+      ctx.save();
+      ctx.setLineDash([8, 6]);
+      ctx.strokeStyle = '#FF6B6B';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(bpos.x + bpos.cell * 0.2, bpos.y);
+      ctx.lineTo(pos.x - pos.cell * 0.2, pos.y);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 重绘聚光目标箭块并加金色脉冲框
+    drawArrowTile(ctx, pos.x, pos.y, pos.cell, target.dir, target.kind, 0, 0, currentSkin(), 0);
+    ctx.strokeStyle = '#FFD452';
+    ctx.lineWidth = 8;
+    rr(pos.x - pos.cell * 0.52 * pulse, pos.y - pos.cell * 0.52 * pulse, pos.cell * 1.04 * pulse, pos.cell * 1.04 * pulse, 24);
+    ctx.stroke();
+
+    // 简明短标牌（不超过 8 字）
+    var tip = tutorialStep === 1 ? '第一步：点它飞出阵' : '第二步：先清挡路箭';
+    var tipY = pos.y - pos.cell * 0.92;
+    if (tipY < 260) tipY = pos.y + pos.cell * 0.95;
+    rr(W * 0.5 - 190, tipY - 34, 380, 68, 34);
+    ctx.fillStyle = '#FFD452';
+    ctx.fill();
+    ctx.fillStyle = '#234236';
+    ctx.font = 'bold 30px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(tip, W * 0.5, tipY + 1);
+    ctx.restore();
+  }
+
+  function drawResultOverlay(skin) {
+    if (phase !== 'won' && phase !== 'lost') return;
+    ctx.save();
+    ctx.fillStyle = 'rgba(18, 30, 25, 0.56)';
+    ctx.fillRect(-200, -400, W + 400, H + 800);
+
+    var cx = 76;
+    var cy = 290;
+    var cw = W - 152;
+    var ch = 640;
+    rr(cx, cy, cw, ch, 36);
+    ctx.fillStyle = skin.boardFill;
+    ctx.fill();
+    ctx.strokeStyle = phase === 'won' ? '#E9A626' : '#E05252';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    if (phase === 'won') {
+      var cheer = CHEERS[(level + maxComboThisRun) % CHEERS.length];
+      ctx.fillStyle = '#2BAE85';
+      ctx.font = '900 54px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('清盘破阵！', W * 0.5, cy + 82);
+
+      ctx.fillStyle = '#536A5C';
+      ctx.font = 'bold 28px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(cheer + ' · 最高连清 ×' + maxComboThisRun, W * 0.5, cy + 144);
+
+      rr(cx + 50, cy + 190, cw - 100, 118, 22);
+      ctx.fillStyle = skin.cellFill;
+      ctx.fill();
+      ctx.fillStyle = skin.titleColor;
+      ctx.font = 'bold 30px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('本局得分 ' + score + ' · 获 +' + lastRewardEarned + ' 灵玉', W * 0.5, cy + 234);
+      ctx.fillStyle = '#2BAE85';
+      ctx.font = '600 24px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('当前累计灵玉：' + save.jade, W * 0.5, cy + 278);
+
+      if (!doubleClaimed) {
+        drawJellyButton('btn_double', cx + 56, cy + 340, cw - 112, 86, '双倍领取灵玉', '首发限免 · 再领 +' + lastRewardEarned, '#E9A626', '#B37A10', '#FFFFFF', function () {
+          triggerRewardAd('doubleCoins', function () {
+            doubleClaimed = true;
+            save.jade += lastRewardEarned;
+            writeSave();
+            sfxWin();
+            showToast('双倍灵玉已入账！');
+          });
+        });
+      }
+
+      drawJellyButton('btn_next', cx + 56, cy + 448, cw - 112, 92, mode === 'daily' ? '返回主阵' : ('挑战第 ' + Math.min(60, level + 1) + ' 阵'), null, '#2BAE85', '#1C7E5F', '#FFFFFF', function () {
+        if (mode === 'daily') { phase = 'title'; }
+        else { startLevel(Math.min(60, level + 1), 'campaign'); }
+      });
+
+      drawJellyButton('btn_win_home', cx + 150, cy + 558, cw - 300, 62, '返回主页', null, '#8CA196', '#62766C', '#FFFFFF', function () {
+        phase = 'title';
+      });
+    } else {
+      ctx.fillStyle = '#D9483B';
+      ctx.font = '900 50px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('差一点就清盘！', W * 0.5, cy + 86);
+
+      ctx.fillStyle = '#536A5C';
+      ctx.font = 'bold 28px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('场上仅剩 ' + aliveCount() + ' 支灵箭，是否续命继续？', W * 0.5, cy + 154);
+
+      if (!reviveUsed) {
+        drawJellyButton('btn_revive', cx + 56, cy + 236, cw - 112, 98, '满血续命 · 恢复三心', '首发限免 · 保留当前全部进度', '#E9A626', '#B37A10', '#FFFFFF', function () {
+          triggerRewardAd('revive', function () {
+            reviveUsed = true;
+            hearts = R.hearts;
+            timeLeft = Math.max(timeLeft, 60);
+            phase = 'playing';
+            sfxWin();
+            showToast('已恢复三心，继续清盘！');
+          });
+        });
+      }
+
+      drawJellyButton('btn_restart', cx + 56, cy + 362, cw - 112, 92, '重新挑战本阵', null, '#2BAE85', '#1C7E5F', '#FFFFFF', function () {
+        startLevel(level, mode);
+      });
+
+      drawJellyButton('btn_lost_home', cx + 150, cy + 482, cw - 300, 72, '返回主页', null, '#8CA196', '#62766C', '#FFFFFF', function () {
+        phase = 'title';
+      });
+    }
+    ctx.restore();
+  }
+
+  function drawModalOverlay(skin) {
+    if (!modal) return;
+    ctx.save();
+    ctx.fillStyle = 'rgba(18, 30, 25, 0.56)';
+    ctx.fillRect(-200, -400, W + 400, H + 800);
+
+    var mx = 56;
+    var my = 210;
+    var mw = W - 112;
+    var mh = 820;
+    rr(mx, my, mw, mh, 34);
+    ctx.fillStyle = skin.boardFill;
+    ctx.fill();
+    ctx.strokeStyle = skin.boardBorder;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = skin.titleColor;
+    ctx.font = '900 42px "PingFang SC","Microsoft YaHei",sans-serif';
+
+    if (modal === 'settings') {
+      ctx.fillText('声音与偏好设置', W * 0.5, my + 74);
+
+      drawJellyButton('tog_bgm', mx + 64, my + 152, mw - 128, 86, '背景乐韵：' + (save.bgmOn ? '已开启' : '已关闭'), null, save.bgmOn ? '#2BAE85' : '#9AA9A1', save.bgmOn ? '#1D7F60' : '#73827A', '#FFFFFF', function () {
+        save.bgmOn = !save.bgmOn; writeSave(); sfxClick();
+      });
+      drawJellyButton('tog_sfx', mx + 64, my + 262, mw - 128, 86, '拨弦音效：' + (save.sfxOn ? '已开启' : '已关闭'), null, save.sfxOn ? '#2BAE85' : '#9AA9A1', save.sfxOn ? '#1D7F60' : '#73827A', '#FFFFFF', function () {
+        save.sfxOn = !save.sfxOn; writeSave(); sfxClick();
+      });
+      drawJellyButton('tog_vibe', mx + 64, my + 372, mw - 128, 86, '触感震动：' + (save.vibeOn ? '已开启' : '已关闭'), null, save.vibeOn ? '#2BAE85' : '#9AA9A1', save.vibeOn ? '#1D7F60' : '#73827A', '#FFFFFF', function () {
+        save.vibeOn = !save.vibeOn; writeSave(); vibrate('light');
+      });
+      if (phase === 'playing') {
+        drawJellyButton('set_restart', mx + 64, my + 492, mw - 128, 82, '重开本阵', null, '#E9A626', '#B37A10', '#FFFFFF', function () {
+          modal = null; startLevel(level, mode);
+        });
+      }
+      drawJellyButton('close_modal', mx + 120, my + 690, mw - 240, 82, '关闭返回', null, '#607D70', '#41574D', '#FFFFFF', function () {
+        modal = null; sfxClick();
+      });
+    } else if (modal === 'shop') {
+      ctx.fillText('灵玉箭坊 · 外观祈愿', W * 0.5, my + 68);
+      ctx.fillStyle = '#2BAE85';
+      ctx.font = 'bold 28px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('当前灵玉：' + save.jade + '（纯免费游玩获取）', W * 0.5, my + 122);
+
+      // 展示 3 套可抽皮肤与明确概率
+      for (var s = 1; s < SKINS.length; s++) {
+        var sk = SKINS[s];
+        var owned = save.unlockedSkins.indexOf(sk.id) !== -1;
+        var rowY = my + 162 + (s - 1) * 114;
+        rr(mx + 38, rowY, mw - 76, 98, 22);
+        ctx.fillStyle = skin.cellFill;
+        ctx.fill();
+        drawArrowTile(ctx, mx + 92, rowY + 49, 64, 0, 'normal', 0, 0, sk, 0);
+        ctx.textAlign = 'left';
+        ctx.fillStyle = skin.titleColor;
+        ctx.font = 'bold 28px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText(sk.name + '（' + sk.rarity + ' · ' + sk.rate + '%）', mx + 144, rowY + 36);
+        ctx.fillStyle = '#5F7468';
+        ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText(owned ? '已拥有 · 可在清阵印记切换' : sk.desc, mx + 144, rowY + 69);
+      }
+
+      if (gachaBanner) {
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#D97706';
+        ctx.font = 'bold 24px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText(gachaBanner, W * 0.5, my + 528);
+      }
+
+      drawJellyButton('btn_gacha', mx + 74, my + 558, mw - 148, 92, '消耗 ' + R.gachaCost + ' 灵玉随机祈愿', '重复获得自动返还 60 灵玉', '#F06A4B', '#BD462B', '#FFFFFF', performGacha);
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#6B7E72';
+      ctx.font = '600 20px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('概率公示：普通60% · 精良30% · 传说10%', W * 0.5, my + 676);
+      ctx.fillText('本版本仅消耗免费灵玉，未开通任何现金支付', W * 0.5, my + 706);
+
+      drawJellyButton('close_modal', mx + 140, my + 728, mw - 280, 72, '关闭', null, '#607D70', '#41574D', '#FFFFFF', function () {
+        modal = null; sfxClick();
+      });
+    } else if (modal === 'codex') {
+      ctx.fillText('清阵印记 · 外观切换', W * 0.5, my + 68);
+      ctx.fillStyle = '#536A5C';
+      ctx.font = 'bold 24px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('累计破阵 ' + save.clearedTotal + ' 局 · 最高连清 ×' + save.bestCombo + ' · 日勋章 ' + save.dailyDates.length + ' 枚', W * 0.5, my + 122);
+
+      for (var c = 0; c < SKINS.length; c++) {
+        var item = SKINS[c];
+        var has = save.unlockedSkins.indexOf(item.id) !== -1;
+        var active = save.skinId === item.id;
+        var ry = my + 162 + c * 124;
+        rr(mx + 38, ry, mw - 76, 108, 22);
+        ctx.fillStyle = active ? '#E4F5EE' : skin.cellFill;
+        ctx.fill();
+        ctx.strokeStyle = active ? '#2BAE85' : skin.boardBorder;
+        ctx.lineWidth = active ? 3 : 1.5;
+        ctx.stroke();
+
+        drawArrowTile(ctx, mx + 92, ry + 54, 66, 0, 'normal', 0, 0, item, 0);
+        ctx.textAlign = 'left';
+        ctx.fillStyle = skin.titleColor;
+        ctx.font = 'bold 28px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText(item.name, mx + 144, ry + 38);
+        ctx.fillStyle = '#5F7468';
+        ctx.font = '600 20px "PingFang SC","Microsoft YaHei",sans-serif';
+        ctx.fillText(item.desc, mx + 144, ry + 72);
+
+        if (has) {
+          (function (sid) {
+            drawJellyButton('equip_' + sid, mx + mw - 196, ry + 20, 140, 68, active ? '使用中' : '换上', null, active ? '#2BAE85' : '#3B8CE6', active ? '#1D7F60' : '#2463AC', '#FFFFFF', function () {
+              save.skinId = sid; writeSave(); sfxClick(); showToast('已切换外观');
+            });
+          })(item.id);
+        } else {
+          ctx.textAlign = 'right';
+          ctx.fillStyle = '#99A89F';
+          ctx.font = 'bold 22px "PingFang SC","Microsoft YaHei",sans-serif';
+          ctx.fillText('箭坊解锁', mx + mw - 64, ry + 56);
+        }
+      }
+
+      drawJellyButton('close_modal', mx + 140, my + 716, mw - 280, 74, '关闭', null, '#607D70', '#41574D', '#FFFFFF', function () {
+        modal = null; sfxClick();
+      });
+    }
+    ctx.restore();
+  }
+
+  function drawEffects() {
+    for (var p = 0; p < particles.length; p++) {
+      var pt = particles[p];
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, pt.life / pt.maxLife);
+      ctx.fillStyle = pt.color;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    for (var f = 0; f < floaters.length; f++) {
+      var fl = floaters[f];
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, fl.life / fl.maxLife);
+      ctx.font = '900 30px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(fl.text, fl.x + 2, fl.y + 2);
+      ctx.fillStyle = fl.color;
+      ctx.fillText(fl.text, fl.x, fl.y);
+      ctx.restore();
+    }
+    if (toastTimer > 0 && toastText) {
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, toastTimer * 2);
+      rr(W * 0.5 - 240, 240, 480, 62, 31);
+      ctx.fillStyle = 'rgba(26, 46, 38, 0.88)';
+      ctx.fill();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 24px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(toastText, W * 0.5, 272);
+      ctx.restore();
+    }
+  }
+
+  /* 13. 输入事件（单手触控 + 鼠标 + 键盘 Enter 启动） */
+  function toLogical(clientX, clientY) {
+    var rect = canvas.getBoundingClientRect ? canvas.getBoundingClientRect() : { left: 0, top: 0 };
+    var lx = (clientX - rect.left - offsetX) / (scale || 1);
+    var ly = (clientY - rect.top - offsetY) / (scale || 1);
+    return { x: lx, y: ly };
+  }
+
+  function handleTap(lx, ly) {
+    unlockAudio();
+    // 优先命中当前顶层可见按钮
+    for (var i = activeButtons.length - 1; i >= 0; i--) {
+      var b = activeButtons[i];
+      if (lx >= b.x && lx <= b.x + b.w && ly >= b.y && ly <= b.y + b.h) {
+        pressBtnAnim(b.id);
+        b.action();
+        return;
+      }
+    }
+    if (modal) return;
+    if (phase === 'title') {
+      var nextLv = R.level > 1 ? R.level : (save.tutorialDone ? Math.min(60, save.maxLevel || 1) : 1);
+      startLevel(nextLv, R.mode);
+      return;
+    }
+    if (phase !== 'playing' || !boardSpec) return;
+
+    var rect = getBoardRect();
+    var pad = 20;
+    var inner = rect.size - pad * 2;
+    var cell = inner / boardSpec.gridSize;
+    var c = Math.floor((lx - (rect.x + pad)) / cell);
+    var r = Math.floor((ly - (rect.y + pad)) / cell);
+    if (r < 0 || r >= boardSpec.gridSize || c < 0 || c >= boardSpec.gridSize) return;
+    for (var a = 0; a < arrows.length; a++) {
+      if (arrows[a].alive && arrows[a].r === r && arrows[a].c === c) {
+        handleArrowTap(arrows[a]);
+        return;
+      }
+    }
+  }
+
+  canvas.addEventListener('pointerdown', function (ev) {
+    if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
+    var pt = toLogical(ev.clientX, ev.clientY);
+    handleTap(pt.x, pt.y);
+  });
+
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('keydown', function (ev) {
+      if (!ev) return;
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        if (phase === 'title') {
+          unlockAudio();
+          var nextLv = save.tutorialDone ? Math.min(60, save.maxLevel || 1) : 1;
+          startLevel(nextLv, 'campaign');
+        } else if (phase === 'won' || phase === 'lost') {
+          startLevel(phase === 'won' ? Math.min(60, level + 1) : level, mode);
+        }
+      }
+    });
+  }
+
+  /* 14. 主循环与动画更新 */
+  function update(dt) {
+    elapsed += dt;
+    if (toastTimer > 0) toastTimer = Math.max(0, toastTimer - dt);
+    if (screenShake > 0) screenShake = Math.max(0, screenShake - dt);
+    for (var bk in btnAnim) {
+      if (btnAnim[bk] > 0) btnAnim[bk] = Math.max(0, btnAnim[bk] - dt * 5.2);
+    }
+
+    if (phase === 'playing' && !modal) {
+      if (tutorialStep === 0) {
+        timeLeft = Math.max(0, timeLeft - dt);
+        if (timeLeft <= 0) phase = 'lost';
+      }
+      if (comboTimer > 0) {
+        comboTimer = Math.max(0, comboTimer - dt);
+        if (comboTimer === 0) combo = 0;
+      }
+    }
+
+    for (var i = 0; i < arrows.length; i++) {
+      var a = arrows[i];
+      if (a.shake > 0) a.shake = Math.max(0, a.shake - dt);
+      if (a.hintGlow > 0) a.hintGlow = Math.max(0, a.hintGlow - dt);
+      if (a.pop > 1) a.pop = Math.max(1, a.pop - dt * 2.4);
+    }
+
+    for (var f = flying.length - 1; f >= 0; f--) {
+      var fl = flying[f];
+      fl.x += fl.vx * dt;
+      fl.y += fl.vy * dt;
+      fl.trail.push({ x: fl.x, y: fl.y });
+      if (fl.trail.length > 7) fl.trail.shift();
+      if (fl.x < -120 || fl.x > W + 120 || fl.y < -120 || fl.y > H + 120) {
+        flying.splice(f, 1);
+      }
+    }
+
+    for (var p = particles.length - 1; p >= 0; p--) {
+      var pt = particles[p];
+      pt.x += pt.vx * dt;
+      pt.y += pt.vy * dt;
+      pt.vy += 260 * dt;
+      pt.life -= dt;
+      if (pt.life <= 0) particles.splice(p, 1);
+    }
+
+    for (var fli = floaters.length - 1; fli >= 0; fli--) {
+      var fo = floaters[fli];
+      fo.y -= 55 * dt;
+      fo.life -= dt;
+      if (fo.life <= 0) floaters.splice(fli, 1);
+    }
+  }
+
+  function render() {
+    var skin = currentSkin();
+    activeButtons = [];
+
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var fullGrad = ctx.createLinearGradient(0, 0, 0, viewH);
+    fullGrad.addColorStop(0, skin.bgTop);
+    fullGrad.addColorStop(1, skin.bgBot);
+    ctx.fillStyle = fullGrad;
+    ctx.fillRect(0, 0, viewW, viewH);
+
+    var shx = screenShake > 0 ? Math.sin(elapsed * 90) * 6 : 0;
+    ctx.translate(offsetX + shx, offsetY);
+    ctx.scale(scale, scale);
+
+    drawBackground(skin);
+    if (phase === 'title') {
+      drawTitleScreen(skin);
+    } else {
+      drawHud(skin);
+      drawBoardAndArrows(skin);
+      drawSpotlightTutorial();
+      drawResultOverlay(skin);
+    }
+    drawModalOverlay(skin);
+    drawEffects();
+    ctx.restore();
+  }
+
+  function loop(ts) {
+    if (!lastTs) lastTs = ts;
+    var dt = Math.min(0.05, Math.max(0.001, (ts - lastTs) / 1000));
+    lastTs = ts;
+    fpsFrames++;
+    fpsAccum += dt;
+    if (fpsAccum >= 0.5) {
+      fps = Math.round(fpsFrames / fpsAccum);
+      fpsFrames = 0;
+      fpsAccum = 0;
+    }
+    update(dt);
+    render();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  /* 15. 微信分享动态文案与 Game Studio 自动试玩契约 */
+  window.__wxSharePayload = function () {
+    if (mode === 'daily') {
+      return { title: '今日千人同盘箭阵已破！仅耗 ' + mistakes + ' 次失误，敢来挑战同一盘吗？' };
+    }
+    if (phase === 'won') {
+      return { title: '我在《' + TITLE + '》连清 ' + maxComboThisRun + ' 箭破阵！这解压手感太上头了' };
+    }
+    return { title: '看清方向一键飞箭，连招清空玉盘极度解压！' };
+  };
+
+  window.__gameState = function () {
+    return {
+      phase: phase,
+      score: score,
+      hearts: hearts,
+      fps: fps,
+      level: level,
+      mode: mode,
+      remainingArrows: aliveCount(),
+      combo: combo,
+      maxCombo: maxComboThisRun,
+      jade: save.jade,
+      tutorialStep: tutorialStep,
+      hero: { x: W * 0.5, y: H * 0.5 },
+      pickups: [],
+      enemies: [],
+      world: { w: W, h: H }
+    };
+  };
+
+  var autoCooldown = 0;
+  window.__autoplay = function () {
+    if (modal) { modal = null; return; }
+    if (phase === 'title') {
+      startLevel(R.level, R.mode);
+      return;
+    }
+    if (phase !== 'playing') return;
+    autoCooldown++;
+    if (autoCooldown % 4 !== 0) return;
+
+    if (tutorialStep === 1) {
+      for (var t1 = 0; t1 < arrows.length; t1++) {
+        if (arrows[t1].alive && arrows[t1].role === 'tut1') { handleArrowTap(arrows[t1]); return; }
+      }
+    }
+    if (tutorialStep === 2) {
+      for (var t2 = 0; t2 < arrows.length; t2++) {
+        if (arrows[t2].alive && arrows[t2].role === 'tut2b') { handleArrowTap(arrows[t2]); return; }
+      }
+    }
+
+    var map = currentArrowMap();
+    for (var i = 0; i < arrows.length; i++) {
+      var a = arrows[i];
+      if (!a.alive || a.ice > 0) continue;
+      if (!findBlockerInMap(map, boardSpec.gridSize, a.r, a.c, a.dir)) {
+        handleArrowTap(a);
+        return;
+      }
+    }
+    // 若仅剩转向箭需先旋转
+    for (var r = 0; r < arrows.length; r++) {
+      var ra = arrows[r];
+      if (ra.alive && ra.kind === 'rotator' && ra.rotLeft > 0) {
+        handleArrowTap(ra);
+        return;
+      }
+    }
+  };
+
+  // 向侧栏上报自定义角色缩略图
+  setTimeout(function () {
+    try { post({ type: 'renders', renders: window.__renderSlots(256) }); } catch (_e) {}
+  }, 120);
+})();
+</script>
+</body></html>
