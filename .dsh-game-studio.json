@@ -14,15 +14,15 @@
     "game-2": {
       "title": "箭定乾坤",
       "source": "1ffe880102cec58a",
-      "publishedAt": "2026-11-23T03:35:45.528Z",
-      "buildId": "d25e842d085e",
+      "publishedAt": "2026-11-23T12:28:01.736Z",
+      "buildId": "f9d5d517a904",
       "dimension": "2d",
       "orientation": "portrait",
       "cover": "game-2/cover.jpg"
     }
   },
   "wall": {
-    "publishedAt": "2026-11-23T03:35:45.528Z",
+    "publishedAt": "2026-11-23T12:28:01.736Z",
     "games": 2
   }
 }
