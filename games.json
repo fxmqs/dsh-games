@@ -3,8 +3,17 @@
   "version": 1,
   "name": "fxmqs 的小游戏",
   "author": "fxmqs",
-  "updatedAt": "2026-11-23T03:35:45.528Z",
+  "updatedAt": "2026-11-23T07:19:24.414Z",
   "games": [
+    {
+      "slug": "game",
+      "title": "箭定乾坤",
+      "url": "game/",
+      "cover": "game/cover.jpg",
+      "dimension": "2d",
+      "orientation": "portrait",
+      "publishedAt": "2026-11-23T07:19:24.414Z"
+    },
     {
       "slug": "game-2",
       "title": "箭定乾坤",
@@ -13,15 +22,6 @@
       "dimension": "2d",
       "orientation": "portrait",
       "publishedAt": "2026-11-23T03:35:45.528Z"
-    },
-    {
-      "slug": "game",
-      "title": "箭定乾坤",
-      "url": "game/",
-      "cover": "game/cover.jpg",
-      "dimension": "2d",
-      "orientation": "portrait",
-      "publishedAt": "2026-11-23T03:34:55.005Z"
     }
   ],
   "wall": "wall/"
