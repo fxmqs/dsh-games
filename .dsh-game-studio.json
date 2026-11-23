@@ -2,15 +2,6 @@
   "tool": "dsh-game-studio",
   "version": 1,
   "games": {
-    "game": {
-      "title": "箭定乾坤",
-      "source": "d25db474f31fc57a",
-      "publishedAt": "2026-11-23T12:27:23.181Z",
-      "buildId": "f9d5d517a904",
-      "dimension": "2d",
-      "orientation": "portrait",
-      "cover": "game/cover.jpg"
-    },
     "game-2": {
       "title": "箭定乾坤",
       "source": "1ffe880102cec58a",
@@ -23,6 +14,6 @@
   },
   "wall": {
     "publishedAt": "2026-11-23T12:28:01.736Z",
-    "games": 2
+    "games": 1
   }
 }
