@@ -3,7 +3,7 @@
   "version": 1,
   "name": "fxmqs 的小游戏",
   "author": "fxmqs",
-  "updatedAt": "2026-11-23T12:31:16.255Z",
+  "updatedAt": "2026-11-24T00:37:05.777Z",
   "games": [
     {
       "slug": "game",
@@ -12,7 +12,7 @@
       "cover": "game/cover.jpg",
       "dimension": "2d",
       "orientation": "portrait",
-      "publishedAt": "2026-11-23T12:31:16.255Z"
+      "publishedAt": "2026-11-24T00:37:05.777Z"
     },
     {
       "slug": "game-2",
